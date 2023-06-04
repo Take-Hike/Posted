@@ -1,0 +1,1596 @@
+local TeleportService = game:GetService("TeleportService")
+
+getgenv().xScript = {
+    Extensions = {""}
+}
+local xScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenizAf4can/xScript/main/xScript"))()
+
+if not isfolder("TRXDENT") then
+    makefolder("TRXDENT")
+end
+
+-- Anti - Sun damage
+xScript.GetLocalPlayer().PlayerScripts.Small_Scripts.Gameplay.Sun_Damage.Disabled = true
+
+-- Remove Damage Text
+game:GetService("ReplicatedStorage"):WaitForChild("Assets"):WaitForChild("Extras"):WaitForChild("Damage_Text"):Destroy()
+
+function givealltitles()
+    for i,v in pairs(xScript.GetLocalPlayer()["Player_Titles_List"]:GetChildren()) do
+        for i2,v2 in pairs(game:GetService("ReplicatedStorage").Modules.Data.TitlesData:GetChildren()) do
+            if v2.Name == v.Name then
+                v.Value = v2:GetAttribute("TitleUnlockValue")
+            end
+        end
+    end
+end
+
+-- Improved TP
+
+local RunService = game:GetService("RunService");
+local NextFrame = RunService.Heartbeat;
+local function ImprovedTeleport(Target, TeleportSpeed)
+    if (typeof(Target) == "Instance" and Target:IsA("BasePart")) then
+        Target = Target.Position;
+    end;
+    if (typeof(Target) == "CFrame") then
+        Target = Target.p
+    end;
+    local HRP = (xScript.GetLocalCharacter() and xScript.GetLocalCharacter():FindFirstChild("HumanoidRootPart"));
+    if (not HRP) then
+        return;
+    end;
+    local StartingPosition = HRP.Position;
+    local PositionDelta = (Target - StartingPosition);--Calculating the difference between the start and end positions.
+    local StartTime = tick();
+    local TotalDuration = (StartingPosition - Target).magnitude / TeleportSpeed;
+    repeat
+        NextFrame:Wait();
+        local Delta = tick() - StartTime;
+        local Progress = math.min(Delta / TotalDuration, 1);--Getting the percentage of completion of the teleport (between 0-1, not 0-100)
+        --We also use math.min in order to maximize it at 1, in case the player gets an FPS drop, so it doesn't go past the target.
+        local MappedPosition = StartingPosition + (PositionDelta * Progress);
+        HRP.Velocity = Vector3.new();--Resetting the effect of gravity so it doesn't get too much and drag the player below the ground.
+        HRP.CFrame = CFrame.new(MappedPosition);
+    until (HRP.Position - Target).magnitude <= TeleportSpeed / 2;
+    HRP.Anchored = false;
+    HRP.CFrame = CFrame.new(Target);
+end;
+
+-- Settings
+
+getgenv().maponeset = {
+    farmlocation = "Above",
+    farmstud = 60,
+    killaura = false,
+    autofarm = false,
+    autochest = false,
+    autolily = false,
+    killauratype = "Fist",
+    bsldelay = 0.5,
+    bslspeed = 250,
+    selectedmobs = {},
+    tspeed = 200,
+    webhook = "",
+    notify = false,
+    ignoreitems = {},
+    autosoul = false,
+    autoblock = false,
+    autowardrums = false,
+    unlockall = false,
+    infsb = false,
+    autoskills = {},
+    autoskillsenabled = false,
+    holdfor = {
+        ["Z"] = 0.1,
+        ["X"] = 0.1,
+        ["C"] = 0.1,
+        ["V"] = 0.1,
+        ["B"] = 0.1,
+        ["N"] = 0.1
+    },
+    spamakaza = false
+}
+
+getgenv().maptwoset = {
+    farmlocation = "Above",
+    farmstud = 60,
+    killaura = false,
+    autofarm = false,
+    autochest = false,
+    killauratype = "Fist",
+    selectedmobs = {},
+    tspeed = 200,
+    webhook = "",
+    notify = false,
+    ignoreitems = {},
+    autosoul = false,
+    autoblock = false,
+    autowardrums = false,
+    unlockall = false,
+    infsb = false,
+    autoskills = {},
+    autoskillsenabled = false,
+    holdfor = {
+        ["Z"] = 0.1,
+        ["X"] = 0.1,
+        ["C"] = 0.1,
+        ["V"] = 0.1,
+        ["B"] = 0.1,
+        ["N"] = 0.1
+    },
+    spamakaza = false
+}
+
+getgenv().ouwigaharaset = {
+    farmlocation = "Above",
+    farmstud = 60,
+    killaura = false,
+    killauratype = "Fist",
+    autofarm = false,
+    autochest = false,
+    autoorb = false,
+    spamakaza = false,
+    autowardrums = false,
+    autoblock = false,
+    rest = false,
+    webhook = "",
+    notify = false,
+    ignoreitems = {
+        "Jumbo Health Regen Elixir",
+        "Jumbo Health Elixir",
+        "Jumbo Stamina Elixir"
+    },
+    tspeed = 200,
+    unlockall = false,
+    infsb = false,
+    autoskills = {},
+    autoskillsenabled = false,
+    holdfor = {
+        ["Z"] = 0.1,
+        ["X"] = 0.1,
+        ["C"] = 0.1,
+        ["V"] = 0.1,
+        ["B"] = 0.1,
+        ["N"] = 0.1
+    }
+}
+
+function notificat(ItemName, Webhook)
+    local Time = os.date('!*t', os.time());
+    local data = {
+        ["content"] = "",
+            ["username"] = "xScript - Project Slayers",
+            ["avatar_url"] = "https://i.hizliresim.com/7zaczw5.png",
+            ["embeds"] = {
+            {
+                ["author"] = {
+                    ["name"] = "xScript - Project Slayers",
+                    ["icon_url"] = "https://i.hizliresim.com/7zaczw5.png"
+                },
+                ["thumbnail"] = {
+                    ['url'] = "https://tr.rbxcdn.com/2513233eca27e8dc211032f90840e421/150/150/Image/Png",
+                },
+                ["description"] = " Player Name : ||**"..game:GetService("Players").LocalPlayer.Name.."**||",
+                ["color"] = 1,
+                ["timestamp"] = string.format('%d-%d-%dT%02d:%02d:%02dZ', Time.year, Time.month, Time.day, Time.hour, Time.min, Time.sec),
+                ["fields"] = {
+                    {
+                        ["name"] ="Item Drop",
+                        ["value"] = "```You Got "..ItemName.."!```",
+                    }
+                },
+                ["footer"] = { -- Again, has to be stored as a table.
+                    ["text"] = "TRXDENT * xScript - Project Slayers"
+                }
+            }
+        }
+    }
+    xScript.SendEmbed(Webhook, data)
+end
+
+local kasdqw = false
+function killauraa(type)
+    local A_1
+    if type == "Sword" then
+        A_1 = "Sword_Combat_Slash"
+    elseif type == "Fist" then
+        A_1 = "fist_combat"
+    elseif type == "Scythe" then
+        A_1 = "Scythe_Combat_Slash"
+    elseif type == "Claws" then
+        A_1 = "claw_Combat_Slash"
+    elseif type == "Fans" then
+        A_1 = "fans_combat_slash"
+    end
+    if xScript.GetLocalCharacter():FindFirstChild("HumanoidRootPart") then
+        local A_2 = xScript.GetLocalPlayer()
+        local A_3 = xScript.GetLocalCharacter()
+        local A_4 = xScript.GetLocalCharacter().HumanoidRootPart
+        local A_5 = xScript.GetLocalCharacter().Humanoid
+        local z = 0
+        kasdqw = true
+        wait(0.5)
+        repeat
+            local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
+            local A_6 = 1
+            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
+            wait(0.01)
+            local A_6 = 2
+            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
+            wait(0.01)
+            local A_6 = 3
+            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
+            wait(0.01)
+            local A_6 = 4
+            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
+            wait(0.01)
+            local A_6 = 919
+            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
+            wait(0.01)
+            z += 1
+        until z == 3
+        kasdqw = false
+    end
+end
+
+local ts = game:GetService("TeleportService")
+local api = "https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder?Asc&limit=100"
+
+
+function serverhop(cursor)
+    local raw = game.HttpGet(api..((cursor and "&cursor="..cursor) or ""))
+    local decode = game.HttpService:JSONDecode(raw)
+    return decode
+end
+
+-- Save System
+
+local filename = "TRXDENT/ProjectSlayers"..game.PlaceId..".lua"
+
+function loadSettings()
+	print("Loading Settings")
+	local HttpService = game:GetService("HttpService");
+	if (readfile and isfile and isfile(filename)) then
+		if filename == "TRXDENT/ProjectSlayers6152116144.lua" then
+            maponeset = HttpService:JSONDecode(readfile(filename));
+        elseif filename == "TRXDENT/ProjectSlayers11468159863.lua" then
+            maptwoset = HttpService:JSONDecode(readfile(filename));
+        elseif filename == "TRXDENT/ProjectSlayers11468034852.lua" then
+            mugentrainset = HttpService:JSONDecode(readfile(filename));
+        elseif filename == "TRXDENT/ProjectSlayers11468075017.lua" then
+            ouwigaharaset = HttpService:JSONDecode(readfile(filename));
+        end
+	else
+		print("File Not Found")	
+	end
+end
+
+function saveSettings()
+	local Logsz;
+	local HttpService = game:GetService("HttpService");
+	if (writefile) then
+        if filename == "TRXDENT/ProjectSlayers6152116144.lua" then
+            Logsz = HttpService:JSONEncode(maponeset);
+        elseif filename == "TRXDENT/ProjectSlayers11468159863.lua" then
+            Logsz = HttpService:JSONEncode(maptwoset);
+        elseif filename == "TRXDENT/ProjectSlayers11468034852.lua" then
+            Logsz = HttpService:JSONEncode(mugentrainset);
+        elseif filename == "TRXDENT/ProjectSlayers11468075017.lua" then
+            Logsz = HttpService:JSONEncode(ouwigaharaset);
+        end
+		writefile(filename, Logsz)
+	else
+		print("Windows Rejected Save Request")
+	end
+end
+
+-- Lobby
+
+if game.PlaceId == 5956785391 then
+
+end
+
+-- Map 1
+
+if game.PlaceId == 6152116144 then
+
+    local fin = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenizAf4can/FinityV2/main/FinityV2"))()
+    local fm = fin.new("verydark","TRXDENT", false)
+    local mainc = fm:Category("Map 1")
+    local ausc = fm:Category("Auto Skill")
+    local mains = mainc:Sector("Main")
+    local bsl = mainc:Sector("Blue Spider Lily")
+    local other = mainc:Sector("Other")
+    local other2 = mainc:Sector("Other 2")
+    local autoskill = ausc:Sector("Auto Skills")
+    local msettings = mainc:Sector("Settings")
+    local rmobdr
+
+
+    -- Main
+
+    mains:Cheat("Checkbox","Auto Farm", function(q)
+        maponeset.autofarm = q
+    end, {enabled = maponeset.autofarm})
+
+    mains:Cheat("Checkbox","Auto Block", function(q)
+        maponeset.autoblock = q
+        if q then   
+        else
+            local A_1 = "remove_blocking"
+            local A_2 = game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name]
+            local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S_"]
+            Event:InvokeServer(A_1, A_2)
+        end
+    end, {enabled = maponeset.autoblock})
+
+    mains:Cheat("Checkbox","Auto Collect Chest", function(q)
+        maponeset.autochest = q
+    end, {enabled = maponeset.autochest})
+
+    mains:Cheat("Checkbox","Kill Aura", function(q)
+        maponeset.killaura = q
+    end, {enabled = maponeset.killaura})
+
+    mains:Cheat("Dropdown","Kill Aura Type", function(q)
+        maponeset.killauratype = q
+    end, {options = {"Fist","Sword","Scythe","Claws","Fans"}, default = maponeset.killauratype})
+
+    mains:Cheat("Checkbox","Auto Eat Soul ( Demon )", function(q)
+        maponeset.autosoul = q
+    end, {enabled = maponeset.autosoul})
+
+    mains:Cheat("dropdown","Select Mobs", function(q)
+        table.insert(maponeset.selectedmobs, q)
+        rmobdr:RemoveOptionAll()
+        rmobdr:AddOptions(maponeset.selectedmobs)
+    end, {options = {"Yowai Demon","Civilian","Mizunoto Demon Slayer","Sakurai Demon","Zoku's Subordinate","Bandit Kaden","Bandit Zoku","Shiron","Zangetsu Kuuchie","Sabito","Sanemi","Yahaba","Nezuko","Slasher","Susamaru","Giyu"}, default = ""})
+
+    rmobdr = mains:Cheat("dropdown","Remove Selected Mob", function(q)
+        for i,v in pairs(maponeset.selectedmobs) do
+            if v == q then
+                table.remove(maponeset.selectedmobs, i)
+            end
+        end
+        rmobdr:RemoveOptionAll()
+        rmobdr:AddOptions(maponeset.selectedmobs)
+    end, {options = {}, default = ""})
+
+    mains:Cheat("Dropdown","Location", function(q)
+        maponeset.farmlocation = q
+    end, {options = {"Above","Under"}, default = maponeset.farmlocation})
+
+    mains:Cheat("slider","Distance", function(q)
+        maponeset.farmstud = q
+    end, {min = 0, max = 100, default = maponeset.farmstud})
+
+    mains:Cheat("Slider","Tween Speed", function(q)
+        maponeset.tspeed = q
+    end, {min = 100, max = 500, suffix = "  Speed", default = maponeset.tspeed})
+
+    -- Blue Spider Lily
+
+    bsl:Cheat("Checkbox","Auto Collect Blue Spider Lily", function(q)
+        maponeset.autolily = q
+    end, {enabled = maponeset.autolily})
+
+    bsl:Cheat("Slider","Delay", function(q)
+        maponeset.bsldelay = q
+    end, {min = 0, max = 2, suffix = " Second's", default = maponeset.bsldelay})
+
+    bsl:Cheat("Slider","Speed", function(q)
+        maponeset.bslspeed = q
+    end, {min = 100, max = 400, suffix = "  Speed", default = maponeset.bslspeed})
+
+    -- Other
+
+    other:Cheat("Button","Remove Map", function(q)
+        for i,v in pairs(game.Workspace.Map:GetChildren()) do
+            v:Destroy()
+        end
+    end, {text = "Remove"})
+
+    other:Cheat("Button","Low Graphics", function(q)
+        for i,v in pairs(game.Workspace.Map:GetDescendants()) do
+            if v:IsA("Part") then
+                v.Material = Enum.Material.SmoothPlastic
+            end
+        end
+    end, {text = ""})
+
+    other:Cheat("TextBox","Webhook URL",function(q)
+        maponeset.webhook = q
+    end, {placeholder = maponeset.webhook})
+
+    other:Cheat("textbox","Ignore Items",function(q)
+        table.insert(maponeset.ignoreitems, q)
+    end,{placeholder = "ItemName"})
+
+    other:Cheat("Checkbox","Notification",function(q)
+        maponeset.notify = q
+    end, {default = maponeset.notify})
+
+    other:Cheat("Button","Teleport To Muzan", function(q)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace").Muzan.SpawnPos.Value)
+    end, {text = "Teleport"})
+
+    other:Cheat("Button","Teleport To Doctor Higoshima", function(q)
+        xScript.SetPlayerPosition(Vector3.new(523.2926, 321.84246, -2298.156))
+    end, {text = "Teleport"})
+    
+    other2:Cheat("TextBox", "Custom Title (Client)", function(q)
+        xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value = q
+    end, {placeholder = xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value})
+
+    other2:Cheat("Button","Unlock All Titles", function()
+        givealltitles()
+    end)
+
+    other2:Cheat("Checkbox","Rengoku Mode ( Human Only )", function(q)
+        game:GetService("ReplicatedStorage").Remotes.heart_ablaze_mode_remote:FireServer(q)
+    end)
+
+    other2:Cheat("Checkbox","Kamado Regen ( Kamado Only )", function(q)
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("heal_tang123asd"):FireServer(true)
+    end)
+
+    other2:Cheat("Checkbox","Akaza God Mode ( Shockwave BDA Only )", function(q)
+        maponeset.spamakaza = q   
+    end, {default = maponeset.spamakaza})
+
+    other2:Cheat("Checkbox","War Drums Mode", function(q)
+        maponeset.autowardrums = q
+    end, {default = maponeset.autowardrums})
+
+    other2:Cheat("Checkbox","God Speed Mode", function(q)
+        game.ReplicatedStorage.Remotes.thundertang123:FireServer(q)
+    end)
+
+    local rsmgd = false
+    other2:Cheat("Checkbox","Regeneration", function(q)
+        rsmgd = q
+        while rsmgd do wait(5)
+            game:GetService("ReplicatedStorage").Remotes.regeneration_breathing_remote:FireServer(true)
+        end
+    end)
+
+    other2:Cheat("Button","No Cooldown", function(q)
+        for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.Power_Adder:GetDescendants()) do
+            if v.Name == "CoolDown" and v:IsA("NumberValue") then
+                v.Value = 0
+            end
+        end  
+    end)
+
+    other2:Cheat("Checkbox","Inf Breathing & Stamina", function(q)
+        maponeset.infsb = q
+    end, {default = maponeset.infsb})
+
+    other2:Cheat("Button","Server Hop", function(q)
+        local Server, Next
+        repeat
+            local Servers = serverhop(Next)
+            Server = Servers.data[1]
+            Next = Servers.nextPageCursor
+            for i,v in pairs(Server) do
+                print(i,v) 
+            end
+        until Server["playing"] <= 2 and Server["ping"] <= 60
+        ts:TeleportToPlaceInstance(game.PlaceId,Server.id)
+    end)
+
+    spawn(function()
+        while true do wait(0)
+            if maponeset.infsb then
+                game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name].Stamina.Value = 99999
+                game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name].Breath.Value = 99999
+            end
+        end
+    end)
+
+    spawn(function()
+        while true do wait(2)
+            if maponeset.spamakaza then
+                local A_1 = "skil_ting_asd"
+                local A_2 = game.Players.LocalPlayer
+                local A_3 = "akaza_bda_compass_needle"
+                local A_4 = 1
+                game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]:FireServer(A_1, A_2, A_3, A_4)
+            end
+        end
+    end)
+    
+    -- Auto Skills
+
+    autoskill:Cheat("Checkbox","Enable ( For PC )",function(q)
+        maponeset.autoskillsenabled = q
+    end)
+
+    autoskill:Cheat("MultipleDropdown", "Auto Use Skills", function(q)
+        maponeset.autoskills = q
+    end, {options = {"Z","X","C","V","B","N"}, default = ""})
+
+    autoskill:Cheat("Slider","Hold Z for", function(q)
+        maponeset.holdfor["Z"] = q
+    end, {min = 0.1, max = 5, default = 0.1})
+
+    autoskill:Cheat("Slider","Hold X for", function(q)
+        maponeset.holdfor["X"] = q
+    end, {min = 0.1, max = 5, default = 0.1})
+
+    autoskill:Cheat("Slider","Hold C for", function(q)
+        maponeset.holdfor["C"] = q
+    end, {min = 0.1, max = 5, default = 0.1})
+
+    autoskill:Cheat("Slider","Hold V for", function(q)
+        maponeset.holdfor["V"] = q
+    end, {min = 0.1, max = 5, default = 0.1})
+
+    autoskill:Cheat("Slider","Hold B for", function(q)
+        maponeset.holdfor["B"] = q
+    end, {min = 0.1, max = 5, default = 0.1})
+
+    autoskill:Cheat("Slider","Hold N for", function(q)
+        maponeset.holdfor["N"] = q
+    end, {min = 0.1, max = 5, default = 0.1})
+
+    spawn(function()
+        while true do wait()
+            if maponeset.autoskillsenabled then
+                for i,v in pairs(maponeset.autoskills) do
+                    if v == "Z" then
+                        keypress(0x5A)
+                        wait(maponeset.holdfor["Z"])
+                        keyrelease(0x5A)
+                    elseif v == "X" then
+                        keypress(0x58)
+                        wait(maponeset.holdfor["X"])
+                        keyrelease(0x58)
+                    elseif v == "C" then
+                        keypress(0x43)
+                        wait(maponeset.holdfor["C"])
+                        keyrelease(0x43)
+                    elseif v == "V" then
+                        keypress(0x56)
+                        wait(maponeset.holdfor["V"])
+                        keyrelease(0x56)
+                    elseif v == "B" then
+                        keypress(0x42)
+                        wait(maponeset.holdfor["B"])
+                        keyrelease(0x42)
+                    elseif v == "N" then
+                        keypress(0x4E)
+                        wait(maponeset.holdfor["N"])
+                        keyrelease(0x4E)
+                    end
+                end
+            end
+        end
+    end)
+
+    -- Settings
+
+    msettings:Cheat("Button","Save Settings", function()
+        saveSettings()
+    end,{text = "Save"})
+    msettings:Cheat("Button","Load Settings", function()
+        loadSettings()
+    end, {text = "Load"}) 
+
+
+    -- Functions
+
+    function getclosestmob()
+        local ret = {nil, math.huge} 
+        for i,v in pairs(workspace.Mobs:GetDescendants()) do 
+            for _, h in pairs(maponeset.selectedmobs) do
+                if v:IsA("Model") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v.Name == h then 
+                    local magnitude = (xScript.GetLocalCharacter().HumanoidRootPart.Position - v.WorldPivot.Position).Magnitude 
+                    if magnitude < ret[2] then 
+                        ret[2] = magnitude 
+                        ret[1] = v 
+                    end 
+                end 
+            end
+        end 
+        return ret[1]
+    end 
+
+   spawn(function()
+        while true do wait(2)
+            if maponeset.autowardrums then
+                local A_1 = true
+                local Event = game:GetService("ReplicatedStorage").Remotes["war_Drums_remote"]
+                Event:FireServer(A_1)
+            end
+        end
+   end)
+
+   spawn(function()
+        while true do wait(2)
+            if maponeset.killaura then
+                killauraa(maponeset.killauratype)
+            end
+        end
+   end)
+
+    spawn(function()
+        while true do wait()
+            if maponeset.autofarm then
+                local mob = getclosestmob()
+                repeat
+                    wait(0.5)
+                    mob = getclosestmob()
+                    if not maponeset.autofarm then return end
+                until mob ~= nil
+                if maponeset.autoblock then
+                    local A_1 = "add_blocking"
+                    local A_2 = "Players."..xScript.GetLocalPlayer().Name..".PlayerScripts.Skills_Modules.Combat.Sword//Block"
+                    local A_3 = 553231.8661308
+                    local A_4 = game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name]
+                    local A_5 = 416
+                    local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
+                    Event:FireServer(A_1, A_2, A_3, A_4, A_5)
+                end
+                ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
+                if kasdqw then
+                    repeat
+                        wait(0.01)
+                        ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,0,0), maponeset.tspeed)
+                    until not kasdqw
+                else
+                    repeat
+                        wait(0.01)
+                        if maponeset.farmlocation == "Above" then
+                            ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
+                        elseif maponeset.farmlocation == "Under" then
+                            ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,-maponeset.farmstud,0), maponeset.tspeed)
+                        end
+                        if not maponeset.autofarm then return end
+                    until kasdqw
+                end
+            end
+        end
+    end)
+
+    game:GetService("ReplicatedStorage").Player_Data[xScript.GetLocalPlayer().Name].Inventory.Items.ChildAdded:Connect(function(part)
+        local acces = true
+            for a,b in pairs(maponeset.ignoreitems) do
+                if b == part.Name then
+                    acces = false
+                end
+            end
+            if maponeset.notify and acces then
+                notificat(part.Name, maponeset.webhook)
+            end
+    end)
+
+    for i,v in pairs(game:GetService("ReplicatedStorage").Player_Data[xScript.GetLocalPlayer().Name].Inventory.Items:GetDescendants()) do
+        if v.Name == "Amount" then
+            v.Changed:Connect(function()
+                local acces = true
+                for a,b in pairs(maponeset.ignoreitems) do
+                    if b == v.Parent.Name then
+                        acces = false
+                    end
+                end
+                if maponeset.notify and acces then
+                    notificat(v.Parent.Name, maponeset.webhook)
+                end
+            end)
+        end 
+    end
+
+    spawn(function()
+        while task.wait() do
+            if maponeset.autochest then
+                for _, v in pairs(game:GetService("Workspace").Debree:GetChildren()) do
+                    if v.Name == "Loot_Chest" then
+                        for _, c in pairs(v:FindFirstChild("Drops"):GetChildren()) do
+                            v["Add_To_Inventory"]:InvokeServer(c.Name)
+                            delay(0.5, function()
+                                c:Destroy()
+                            end)
+                        end
+                        v:Destroy()
+                    end
+                end
+            end
+        end
+    end)
+
+    spawn(function()
+        while true do wait()
+            if maponeset.autosoul then
+                pcall(function()
+                    for i,v in pairs(workspace.Debree:GetChildren()) do
+                        if v.Name == "Soul" then
+                            fireproximityprompt(v.Handle["Pick_up_soul"])
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+    local flowers = game:GetService("Workspace").Demon_Flowers_Spawn
+    local function getFlower()
+        local dist, flower = math.huge
+        for i, v in next, flowers:GetChildren() do
+            if v:IsA('Model') then
+                local mag = (xScript.GetLocalCharacter().HumanoidRootPart.Position - v.WorldPivot.Position).magnitude
+                if mag < dist then
+                    dist = mag
+                    flower = v
+                end
+            end
+        end
+        return flower
+    end
+
+    local function asdqw()
+        local suc,err = pcall(function()
+            while task.wait() do
+                if maponeset.autolily then
+                    repeat
+                    task.wait()
+                    ImprovedTeleport(getFlower().WorldPivot.Position, maponeset.bslspeed)
+                    task.wait(maponeset.bsldelay)
+                    for i, v in next, getFlower():GetDescendants() do
+                        if v:IsA("ProximityPrompt") then
+                        local try = 0
+                        repeat
+                            wait(0.01)
+                            try += 1
+                            fireproximityprompt(v, 1, true)
+                            if not getFlower() or not maponeset.autolily then asdqw() break end
+                        until try == 10
+                        getFlower():Destroy()
+                        end
+                    end
+                    until not getFlower() or not maponeset.autolily
+                end
+            end
+        end)
+        if suc then
+            while task.wait() do
+                if maponeset.autolily then
+                    repeat
+                    task.wait()
+                    ImprovedTeleport(getFlower().WorldPivot.Position, maponeset.bslspeed)
+                    task.wait(maponeset.bsldelay)
+                    for i, v in next, getFlower():GetDescendants() do
+                        if v:IsA("ProximityPrompt") then
+                        local try = 0
+                        repeat
+                            wait(0.01)
+                            try += 1
+                            fireproximityprompt(v, 1, true)
+                            if not getFlower() or not maponeset.autolily then asdqw() break end
+                        until try == 10
+                        getFlower():Destroy()
+                        end
+                    end
+                    until not getFlower() or not maponeset.autolily
+                end
+            end
+        else
+            asdqw()
+        end
+    end
+    asdqw()
+
+end
+
+-- Map 2
+if game.PlaceId == 11468159863 then
+
+    local fin = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenizAf4can/FinityV2/main/FinityV2"))()
+    local fm = fin.new("verydark","TRXDENT", false)
+    local mainc = fm:Category("Map 2")
+    local autosc = fm:Category("Auto Skill")
+    local mains = mainc:Sector("Main")
+    local other = mainc:Sector("Other")
+    local autoskill = autosc:Sector("Auto Skills")
+    local msettings = mainc:Sector("Settings")
+
+    local rmobdr
+
+
+    -- Main
+
+    mains:Cheat("Checkbox","Auto Farm", function(q)
+        maptwoset.autofarm = q
+    end, {enabled = maptwoset.autofarm})
+
+    mains:Cheat("Checkbox","Auto Block", function(q)
+        maptwoset.autoblock = q
+        if q then   
+        else
+            local A_1 = "remove_blocking"
+            local A_2 = game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name]
+            local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S_"]
+            Event:InvokeServer(A_1, A_2)
+        end
+    end, {enabled = maptwoset.autoblock})
+
+    mains:Cheat("Checkbox","Auto Collect Chest", function(q)
+        maptwoset.autochest = q
+    end, {enabled = maptwoset.autochest})
+
+    mains:Cheat("Checkbox","Kill Aura", function(q)
+        maptwoset.killaura = q
+    end, {enabled = maptwoset.killaura})
+
+    mains:Cheat("Dropdown","Kill Aura Type", function(q)
+        maptwoset.killauratype = q
+    end, {options = {"Fist","Sword","Scythe","Claws","Fans"}, default = maptwoset.killauratype})
+
+    mains:Cheat("Checkbox","Auto Eat Soul ( Demon )", function(q)
+        maptwoset.autosoul = q
+    end, {enabled = maptwoset.autosoul})
+
+    mains:Cheat("dropdown","Select Mobs", function(q)
+        table.insert(maptwoset.selectedmobs, q)
+        rmobdr:RemoveOptionAll()
+        rmobdr:AddOptions(maptwoset.selectedmobs)
+    end, {options = {"Yowai Demon","Thief","Nomay Bandit","Civilian","Heikin Demon","Slasher","Nomay Bandit Boss","Sound Trainee","Snow Trainee","Inosuke","Renpeke","Muichiro Tokito","Enme","Swampy","Rengoku","Akeza","Douma","Tengen"}, default = ""})
+
+    rmobdr = mains:Cheat("dropdown","Remove Selected Mob", function(q)
+        for i,v in pairs(maptwoset.selectedmobs) do
+            if v == q then
+                table.remove(maptwoset.selectedmobs, i)
+            end
+        end
+        rmobdr:RemoveOptionAll()
+        rmobdr:AddOptions(maptwoset.selectedmobs)
+    end, {options = {"Yowai Demon","Thief","Nomay Bandit","Civilian","Heikin Demon","Slasher","Nomay Bandit Boss","Sound Trainee","Snow Trainee","Inosuke","Renpeke","Muichiro Tokito","Enme","Swampy","Rengoku","Akeza","Douma","Tengen"}, default = ""})
+
+    mains:Cheat("Dropdown","Location", function(q)
+        maptwoset.farmlocation = q
+    end, {options = {"Above","Under"}, default = maptwoset.farmlocation})
+
+    mains:Cheat("slider","Distance", function(q)
+        maptwoset.farmstud = q
+    end, {min = 0, max = 100, default = maptwoset.farmstud})
+
+    mains:Cheat("Slider","Tween Speed", function(q)
+        maptwoset.tspeed = q
+    end, {min = 100, max = 500, suffix = "  Speed", default = maptwoset.tspeed})
+
+    -- Other
+
+    other:Cheat("Button","Remove Map", function(q)
+        for i,v in pairs(game.Workspace.Map:GetChildren()) do
+            v:Destroy()
+        end
+    end, {text = "Remove"})
+
+    other:Cheat("Button","Low Graphics", function(q)
+        for i,v in pairs(game.Workspace.Map:GetDescendants()) do
+            if v:IsA("Part") then
+                v.Material = Enum.Material.SmoothPlastic
+            end
+        end
+    end, {text = ""})
+
+    other:Cheat("TextBox","Webhook URL",function(q)
+        maptwoset.webhook = q
+    end, {placeholder = maptwoset.webhook})
+
+    other:Cheat("textbox","Ignore Items",function(q)
+        table.insert(maptwoset.ignoreitems, q)
+    end,{placeholder = "ItemName"})
+
+    other:Cheat("Checkbox","Notification",function(q)
+        maptwoset.notify = q
+    end, {default = maptwoset.notify})
+    
+    other:Cheat("TextBox", "Custom Title (Client)", function(q)
+        xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value = q
+    end, {placeholder = xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value})
+
+    other:Cheat("Button","Unlock All Titles", function()
+        givealltitles()
+    end)
+
+    other:Cheat("Checkbox","Rengoku Mode ( Human Only )", function(q)
+        game:GetService("ReplicatedStorage").Remotes.heart_ablaze_mode_remote:FireServer(q)
+    end)
+
+    other:Cheat("Checkbox","Kamado Regen ( Kamado Only )", function(q)
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("heal_tang123asd"):FireServer(true)
+    end)
+
+    other:Cheat("Checkbox","Akaza God Mode ( Shockwave BDA Only )", function(q)
+        maptwoset.spamakaza = q   
+    end, {default = maptwoset.spamakaza})
+
+    other:Cheat("Checkbox","War Drums Mode", function(q)
+        maptwoset.autowardrums = q
+    end, {default = maptwoset.autowardrums})
+
+    other:Cheat("Checkbox","God Speed Mode", function(q)
+        game.ReplicatedStorage.Remotes.thundertang123:FireServer(q)
+    end)
+
+    local rsmgd = false
+    other:Cheat("Checkbox","Regeneration", function(q)
+        rsmgd = q
+        while rsmgd do wait(5)
+            game:GetService("ReplicatedStorage").Remotes.regeneration_breathing_remote:FireServer(true)
+        end
+    end)
+
+    other:Cheat("Button","No Cooldown", function(q)
+        for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.Power_Adder:GetDescendants()) do
+            if v.Name == "CoolDown" and v:IsA("NumberValue") then
+                v.Value = 0
+            end
+        end  
+    end)
+
+    other:Cheat("Checkbox","Inf Breathing & Stamina", function(q)
+        maptwoset.infsb = q
+    end, {default = maptwoset.infsb})
+
+    other:Cheat("Button","Server Hop", function(q)
+        local Server, Next
+        repeat
+            local Servers = serverhop(Next)
+            Server = Servers.data[1]
+            Next = Servers.nextPageCursor
+            for i,v in pairs(Server) do
+                print(i,v) 
+            end
+        until Server["playing"] <= 3 and Server["ping"] <= 100
+        ts:TeleportToPlaceInstance(game.PlaceId,Server.id)
+    end)
+
+    -- Auto Skills
+
+    autoskill:Cheat("Checkbox","Enable ( For PC )",function(q)
+        maptwoset.autoskillsenabled = q
+    end, {default = maptwoset.autoskillsenabled})
+
+    autoskill:Cheat("MultipleDropdown", "Auto Use Skills", function(q)
+        maptwoset.autoskills = q
+    end, {options = {"Z","X","C","V","B","N"}, default = maptwoset.autoskills})
+
+    autoskill:Cheat("Slider","Hold Z for", function(q)
+        maptwoset.holdfor["Z"] = q
+    end, {min = 0.1, max = 5, default = maptwoset.holdfor["Z"]})
+
+    autoskill:Cheat("Slider","Hold X for", function(q)
+        maptwoset.holdfor["X"] = q
+    end, {min = 0.1, max = 5, default = maptwoset.holdfor["X"]})
+
+    autoskill:Cheat("Slider","Hold C for", function(q)
+        maptwoset.holdfor["C"] = q
+    end, {min = 0.1, max = 5, default = maptwoset.holdfor["C"]})
+
+    autoskill:Cheat("Slider","Hold V for", function(q)
+        maptwoset.holdfor["V"] = q
+    end, {min = 0.1, max = 5, default = maptwoset.holdfor["V"]})
+
+    autoskill:Cheat("Slider","Hold B for", function(q)
+        maptwoset.holdfor["B"] = q
+    end, {min = 0.1, max = 5, default = maptwoset.holdfor["B"]})
+
+    autoskill:Cheat("Slider","Hold N for", function(q)
+        maptwoset.holdfor["N"] = q
+    end, {min = 0.1, max = 5, default = maptwoset.holdfor["N"]})
+
+    spawn(function()
+        while true do wait()
+            if maptwoset.autoskillsenabled then
+                for i,v in pairs(maptwoset.autoskills) do
+                    wait(0.8)
+                    if v == "Z" then
+                        keypress(0x5A)
+                        wait(maptwoset.holdfor["Z"])
+                        keyrelease(0x5A)
+                        wait(0.8)
+                    elseif v == "X" then
+                        keypress(0x58)
+                        wait(maptwoset.holdfor["X"])
+                        keyrelease(0x58)
+                        wait(0.8)
+                    elseif v == "C" then
+                        keypress(0x43)
+                        wait(maptwoset.holdfor["C"])
+                        keyrelease(0x43)
+                        wait(0.8)
+                    elseif v == "V" then
+                        keypress(0x56)
+                        wait(maptwoset.holdfor["V"])
+                        keyrelease(0x56)
+                        wait(0.8)
+                    elseif v == "B" then
+                        keypress(0x42)
+                        wait(maptwoset.holdfor["B"])
+                        keyrelease(0x42)
+                        wait(0.8)
+                    elseif v == "N" then
+                        keypress(0x4E)
+                        wait(maptwoset.holdfor["N"])
+                        keyrelease(0x4E)
+                        wait(0.8)
+                    end
+                end
+            end
+        end
+    end)
+
+    spawn(function()
+        while true do wait(0)
+            if maptwoset.infsb then
+                game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name].Stamina.Value = 99999
+                game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name].Breath.Value = 99999
+            end
+        end
+    end)
+
+    spawn(function()
+        while true do wait(2)
+            if maptwoset.spamakaza then
+                local A_1 = "skil_ting_asd"
+                local A_2 = game.Players.LocalPlayer
+                local A_3 = "akaza_bda_compass_needle"
+                local A_4 = 1
+                game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]:FireServer(A_1, A_2, A_3, A_4)
+            end
+        end
+    end)
+
+    game:GetService("ReplicatedStorage").Player_Data[xScript.GetLocalPlayer().Name].Inventory.Items.ChildAdded:Connect(function(part)
+        local acces = true
+            for a,b in pairs(maptwoset.ignoreitems) do
+                if b == part.Name then
+                    acces = false
+                end
+            end
+            if maptwoset.notify and acces then
+                notificat(part.Name, maptwoset.webhook)
+            end
+    end)
+
+    for i,v in pairs(game:GetService("ReplicatedStorage").Player_Data[xScript.GetLocalPlayer().Name].Inventory.Items:GetDescendants()) do
+        if v.Name == "Amount" then
+            v.Changed:Connect(function()
+                local acces = true
+                for a,b in pairs(maptwoset.ignoreitems) do
+                    if b == v.Parent.Name then
+                        acces = false
+                    end
+                end
+                if maptwoset.notify and acces then
+                    notificat(v.Parent.Name, maptwoset.webhook)
+                end
+            end)
+        end 
+    end
+
+    -- Settings
+
+    msettings:Cheat("Button","Save Settings", function()
+        saveSettings()
+    end,{text = "Save"})
+    msettings:Cheat("Button","Load Settings", function()
+        loadSettings()
+    end, {text = "Load"}) 
+    local moblist = {"Akeza"}
+    function getclosestmob()
+        local ret = {nil, math.huge} 
+        for i,v in pairs(workspace.Mobs:GetDescendants()) do
+            for _, h in pairs(moblist) do
+                if v:IsA("Model") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v.Name == h then 
+                    local magnitude = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.WorldPivot.Position).Magnitude 
+                    if magnitude < ret[2] then 
+                        ret[1] = v
+                        return ret[1]         
+                    end 
+                end 
+            end
+        end 
+        return ret[1]
+    end
+
+    spawn(function()
+        while true do wait(2)
+            if maptwoset.killaura then
+                killauraa(maptwoset.killauratype)
+            end
+        end
+   end)
+
+    spawn(function()
+        while true do wait()
+            if maptwoset.autofarm then
+                if maptwoset.autowardrums then
+                    local A_1 = true
+                    local Event = game:GetService("ReplicatedStorage").Remotes["war_Drums_remote"]
+                    Event:FireServer(A_1)
+                end
+                local mob = getclosestmob()
+                repeat
+                    wait(0.25)
+                    mob = getclosestmob()
+                    if not maptwoset.autofarm then mob = "" end
+                until mob ~= nil
+                if maptwoset.autoblock then
+                    local A_1 = "add_blocking"
+                    local A_2 = "Players."..xScript.GetLocalPlayer().Name..".PlayerScripts.Skills_Modules.Combat.Sword//Block"
+                    local A_3 = 553231.8661308
+                    local A_4 = game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name]
+                    local A_5 = 416
+                    local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
+                    Event:FireServer(A_1, A_2, A_3, A_4, A_5)
+                end
+                pcall(function()
+                    if mob ~= "" then
+                        if mob:FindFirstChild("HumanoidRootPart") then
+                            
+                        else
+                            ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
+                        end
+                        if kasdqw then
+                            repeat
+                                wait(0.01)
+                                ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,0,0), maptwoset.tspeed)
+                            until not kasdqw
+                        else
+                            repeat
+                                wait(0.01)
+                                if maptwoset.farmlocation == "Above" then
+                                    ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
+                                elseif maptwoset.farmlocation == "Under" then
+                                    ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,-maptwoset.farmstud,0), maptwoset.tspeed)
+                                end
+                                if not maptwoset.autofarm then return end
+                            until kasdqw
+                        end
+                    end
+                end)
+                if not maptwoset.autofarm then
+                    repeat
+                        wait(0.6)
+                    until maptwoset.autofarm
+                end
+            end
+        end
+    end)
+
+
+    spawn(function()
+        while task.wait() do
+            if maptwoset.autochest then
+                for _, v in pairs(game:GetService("Workspace").Debree:GetChildren()) do
+                    if v.Name == "Loot_Chest" then
+                        for _, c in pairs(v:FindFirstChild("Drops"):GetChildren()) do
+                            v["Add_To_Inventory"]:InvokeServer(c.Name)
+                            delay(0.5, function()
+                                c:Destroy()
+                            end)
+                        end
+                        v:Destroy()
+                    end
+                end
+            end
+        end
+    end)
+
+    spawn(function()
+        while true do wait()
+            if maptwoset.autosoul then
+                pcall(function()
+                    for i,v in pairs(workspace.Debree:GetChildren()) do
+                        if v.Name == "Soul" then
+                            fireproximityprompt(v.Handle["Pick_up_soul"])
+                        end
+                    end
+                end)
+            end
+        end
+    end)
+
+end
+
+-- Ouwigahara
+if game.PlaceId == 11468075017 then
+    
+    local orbnames = {
+        "StaminaRegen",
+        "BloodMoney",
+        "HealthRegen",
+        "DoublePoints",
+        "InstaKill",
+        "WisteriaPoisoning"
+    }
+
+    local fin = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenizAf4can/FinityV2/main/FinityV2"))()
+    local fm = fin.new("verydark","TRXDENT", false)
+    local mainc = fm:Category("Ouwigahara")
+    local autosc = fm:Category("Auto Skill")
+    local mains = mainc:Sector("Main")
+    local other = mainc:Sector("Other")
+    local autoskill = autosc:Sector("Auto Skills")
+    local msettings = mainc:Sector("Settings")
+
+    mains:Cheat("Checkbox","Auto Farm", function(q)
+        ouwigaharaset.autofarm = q
+    end, {enabled = ouwigaharaset.autofarm})
+
+    mains:Cheat("Checkbox","Rest until full hp, works when under ( "..tostring(math.floor(xScript.GetLocalCharacter().Humanoid.MaxHealth / 3)).." ) HP", function(q)
+        ouwigaharaset.rest = q
+    end, {enabled = ouwigaharaset.rest})
+
+    mains:Cheat("Checkbox","Auto Block", function(q)
+        ouwigaharaset.autoblock = q
+        if q then   
+        else
+            local A_1 = "remove_blocking"
+            local A_2 = game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name]
+            local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S_"]
+            Event:InvokeServer(A_1, A_2)
+        end
+    end, {enabled = ouwigaharaset.autoblock})
+
+    mains:Cheat("Checkbox","Auto Collect Chest", function(q)
+        ouwigaharaset.autochest = q
+    end, {enabled = ouwigaharaset.autochest})
+
+    mains:Cheat("Checkbox","Kill Aura", function(q)
+        ouwigaharaset.killaura = q
+    end, {enabled = ouwigaharaset.killaura})
+
+    mains:Cheat("Dropdown","Kill Aura Type", function(q)
+        ouwigaharaset.killauratype = q
+    end, {options = {"Fist","Sword","Scythe","Claws","Fans"}, default = ouwigaharaset.killauratype})
+
+    mains:Cheat("Dropdown","Location", function(q)
+        ouwigaharaset.farmlocation = q
+    end, {options = {"Above","Under"}, default = ouwigaharaset.farmlocation})
+
+    mains:Cheat("slider","Distance", function(q)
+        ouwigaharaset.farmstud = q
+    end, {min = 0, max = 100, default = ouwigaharaset.farmstud})
+
+    mains:Cheat("slider","Tween Speed", function(q)
+        ouwigaharaset.tspeed = q
+    end, {min = 50, max = 500, default = ouwigaharaset.tspeed})
+
+    other:Cheat("Button","Low Graphics", function(q)
+        for i,v in pairs(game.Workspace.Map:GetDescendants()) do
+            if v:IsA("Part") then
+                v.Material = Enum.Material.SmoothPlastic
+            end
+        end
+    end, {text = ""})
+
+    other:Cheat("Checkbox","Auto Collect Orbs", function(q)
+        ouwigaharaset.autoorb = q
+    end, {enabled = ouwigaharaset.autoorb})
+
+    other:Cheat("Label", "Auto hp regen orb will work when u lower than "..math.floor(xScript.GetLocalCharacter().Humanoid.MaxHealth / 1.3).." hp.")
+
+    other:Cheat("TextBox","Webhook URL",function(q)
+        ouwigaharaset.webhook = q
+    end, {placeholder = ouwigaharaset.webhook})
+
+    other:Cheat("textbox","Ignore Items",function(q)
+        table.insert(ouwigaharaset.ignoreitems, q)
+    end,{placeholder = "Item Name"})
+
+    other:Cheat("Checkbox","Notification",function(q)
+        ouwigaharaset.notify = q
+    end, {enabled = ouwigaharaset.notify})
+
+    other:Cheat("TextBox", "Custom Title ( Client )", function(q)
+        xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value = q
+    end, {placeholder = xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value})
+
+    other:Cheat("Button","Unlock All Titles", function()
+        givealltitles()
+    end)
+
+    other:Cheat("Checkbox","Rengoku Mode ( Human Only )", function(q)
+        game:GetService("ReplicatedStorage").Remotes.heart_ablaze_mode_remote:FireServer(q)
+    end)
+
+    other:Cheat("Checkbox","Kamado Regen ( Kamado Only )", function(q)
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("heal_tang123asd"):FireServer(true)
+    end)
+
+    other:Cheat("Checkbox","Akaza God Mode ( Shockwave BDA Only )", function(q)
+        ouwigaharaset.spamakaza = q   
+    end, {enabled = ouwigaharaset.spamakaza})
+
+    other:Cheat("Checkbox","War Drums Mode", function(q)
+        ouwigaharaset.autowardrums = q
+    end, {enabled = ouwigaharaset.autowardrums})
+
+    other:Cheat("Checkbox","God Speed Mode", function(q)
+        game.ReplicatedStorage.Remotes.thundertang123:FireServer(q)
+    end)
+
+    local rsmgd = false
+    other:Cheat("Checkbox","Regeneration", function(q)
+        rsmgd = q
+        while rsmgd do wait(5)
+            game:GetService("ReplicatedStorage").Remotes.regeneration_breathing_remote:FireServer(true)
+        end
+    end)
+
+    other:Cheat("Button","No Cooldown", function(q)
+        for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.Power_Adder:GetDescendants()) do
+            if v.Name == "CoolDown" and v:IsA("NumberValue") then
+                v.Value = 0
+            end
+        end  
+    end)
+
+    other:Cheat("Checkbox","Inf Breathing & Stamina", function(q)
+        ouwigaharaset.infsb = q
+    end, {enabled = ouwigaharaset.infsb})
+
+    -- Auto Skills
+
+    autoskill:Cheat("Checkbox","Enable ( For PC )",function(q)
+        ouwigaharaset.autoskillsenabled = q
+    end, {enabled = ouwigaharaset.autoskillsenabled})
+
+    autoskill:Cheat("MultipleDropdown", "Auto Use Skills", function(q)
+        ouwigaharaset.autoskills = q
+    end, {options = {"Z","X","C","V","B","N"}, default = ouwigaharaset.autoskills})
+
+    autoskill:Cheat("Slider","Hold Z for", function(q)
+        ouwigaharaset.holdfor["Z"] = q
+    end, {min = 0.1, max = 5, default = ouwigaharaset.holdfor["Z"]})
+
+    autoskill:Cheat("Slider","Hold X for", function(q)
+        ouwigaharaset.holdfor["X"] = q
+    end, {min = 0.1, max = 5, default = ouwigaharaset.holdfor["X"]})
+
+    autoskill:Cheat("Slider","Hold C for", function(q)
+        ouwigaharaset.holdfor["C"] = q
+    end, {min = 0.1, max = 5, default = ouwigaharaset.holdfor["C"]})
+
+    autoskill:Cheat("Slider","Hold V for", function(q)
+        ouwigaharaset.holdfor["V"] = q
+    end, {min = 0.1, max = 5, default = ouwigaharaset.holdfor["V"]})
+
+    autoskill:Cheat("Slider","Hold B for", function(q)
+        ouwigaharaset.holdfor["B"] = q
+    end, {min = 0.1, max = 5, default = ouwigaharaset.holdfor["B"]})
+
+    autoskill:Cheat("Slider","Hold N for", function(q)
+        ouwigaharaset.holdfor["N"] = q
+    end, {min = 0.1, max = 5, default = ouwigaharaset.holdfor["N"]})
+
+    spawn(function()
+        while true do wait()
+            if ouwigaharaset.autoskillsenabled then
+                for i,v in pairs(ouwigaharaset.autoskills) do
+                    if v == "Z" then
+                        keypress(0x5A)
+                        wait(ouwigaharaset.holdfor["Z"])
+                        keyrelease(0x5A)
+                    elseif v == "X" then
+                        keypress(0x58)
+                        wait(ouwigaharaset.holdfor["X"])
+                        keyrelease(0x58)
+                    elseif v == "C" then
+                        keypress(0x43)
+                        wait(ouwigaharaset.holdfor["C"])
+                        keyrelease(0x43)
+                    elseif v == "V" then
+                        keypress(0x56)
+                        wait(ouwigaharaset.holdfor["V"])
+                        keyrelease(0x56)
+                    elseif v == "B" then
+                        keypress(0x42)
+                        wait(ouwigaharaset.holdfor["B"])
+                        keyrelease(0x42)
+                    elseif v == "N" then
+                        keypress(0x4E)
+                        wait(ouwigaharaset.holdfor["N"])
+                        keyrelease(0x4E)
+                    end
+                end
+            end
+        end
+    end)
+
+    spawn(function()
+        while true do wait(0)
+            if ouwigaharaset.infsb then
+                game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name].Stamina.Value = 99999
+                game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name].Breath.Value = 99999
+            end
+        end
+    end)
+
+    spawn(function()
+        while true do wait(2)
+            if ouwigaharaset.spamakaza then
+                local A_1 = "skil_ting_asd"
+                local A_2 = game.Players.LocalPlayer
+                local A_3 = "akaza_bda_compass_needle"
+                local A_4 = 1
+                game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]:FireServer(A_1, A_2, A_3, A_4)
+            end
+        end
+    end)
+
+    game:GetService("ReplicatedStorage").Player_Data[xScript.GetLocalPlayer().Name].Inventory.Items.ChildAdded:Connect(function(part)
+        local acces = true
+        for a,b in pairs(ouwigaharaset.ignoreitems) do
+            if b == part.Name then
+                acces = false
+            end
+        end
+        if ouwigaharaset.notify and acces then
+            notificat(part.Name, ouwigaharaset.webhook)
+        end
+    end)
+
+    for i,v in pairs(game:GetService("ReplicatedStorage").Player_Data[xScript.GetLocalPlayer().Name].Inventory.Items:GetDescendants()) do
+        if v.Name == "Amount" then
+            v.Changed:Connect(function()
+                local acces = true
+                for a,b in pairs(ouwigaharaset.ignoreitems) do
+                    if b == v.Parent.Name then
+                        acces = false
+                    end
+                end
+                if ouwigaharaset.notify and acces then
+                    notificat(v.Parent.Name, ouwigaharaset.webhook)
+                end
+            end)
+        end 
+    end
+
+    -- Settings
+
+    msettings:Cheat("Button","Save Settings", function()
+        saveSettings()
+    end)
+    msettings:Cheat("Button","Load Settings", function()
+        loadSettings()
+    end)
+
+    function getclosestmob()
+        local ret = {nil, math.huge} 
+        for i,v in pairs(workspace.Mobs:GetDescendants()) do 
+            if v:IsA("Model") and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and v.Humanoid.Health > 0 then 
+                local magnitude = (xScript.GetLocalCharacter().HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude 
+                if magnitude < ret[2] then 
+                    ret[2] = magnitude 
+                    ret[1] = v 
+                end 
+            end 
+        end 
+        return ret[1]
+    end 
+    
+    spawn(function()
+        while true do wait(2)
+            if ouwigaharaset.killaura then
+                killauraa(ouwigaharaset.killauratype)
+            end
+        end
+   end)
+   
+   spawn(function()
+        while true do wait(1)
+            if ouwigaharaset.autowardrums then
+                local A_1 = true
+                local Event = game:GetService("ReplicatedStorage").Remotes["war_Drums_remote"]
+                Event:FireServer(A_1)
+            end
+        end
+   end)
+
+    spawn(function()
+        while true do wait()
+            if ouwigaharaset.autofarm then
+                local mob = getclosestmob()
+                repeat
+                    wait(0.25)
+                    mob = getclosestmob()
+                    if not ouwigaharaset.autofarm then return end
+                until mob ~= nil
+                if ouwigaharaset.autoblock then
+                    local A_1 = "add_blocking"
+                    local A_2 = "Players."..xScript.GetLocalPlayer().Name..".PlayerScripts.Skills_Modules.Combat.Sword//Block"
+                    local A_3 = 553231.8661308
+                    local A_4 = game:GetService("ReplicatedStorage").PlayerValues[xScript.GetLocalPlayer().Name]
+                    local A_5 = 416
+                    local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
+                    Event:FireServer(A_1, A_2, A_3, A_4, A_5)
+                end
+
+                pcall(function()
+                    if kasdqw then
+                        repeat
+                            wait(0.01)
+                            ImprovedTeleport(mob:GetPrimaryPartCFrame().Position + Vector3.new(0,0,0), ouwigaharaset.tspeed)
+                        until not kasdqw
+                    else
+                        repeat
+                            wait(0.01)
+                            if ouwigaharaset.farmlocation == "Above" then
+                                ImprovedTeleport(mob:GetPrimaryPartCFrame().Position + Vector3.new(0,ouwigaharaset.farmstud,0), ouwigaharaset.tspeed)
+                            elseif ouwigaharaset.farmlocation == "Under" then
+                                ImprovedTeleport(mob:GetPrimaryPartCFrame().Position + Vector3.new(0,-ouwigaharaset.farmstud,0), ouwigaharaset.tspeed)
+                            end
+                            if not ouwigaharaset.autofarm then return end
+                        until kasdqw
+                    end
+                end)
+                
+                if ouwigaharaset.rest and xScript.GetLocalCharacter().Humanoid.Health <= xScript.GetLocalCharacter().Humanoid.MaxHealth / 3  then
+                    ImprovedTeleport(Vector3.new(6450.11621, -32.141670227, -897.803466), ouwigaharaset.tspeed)
+                    repeat
+                        wait(0.2)
+                    until xScript.GetLocalCharacter().Humanoid.Health == xScript.GetLocalCharacter().Humanoid.MaxHealth
+                end
+                if ouwigaharaset.autoorb and getclosestmob() == nil then
+                    for i,v in pairs(game.Workspace.Map:GetChildren()) do
+                        for _, h in pairs(orbnames) do
+                            if v.Name == h then
+                                if v.Name == "HealthRegen" then
+                                    if xScript.GetLocalCharacter().Humanoid.Health <= (xScript.GetLocalCharacter().Humanoid.MaxHealth / 1.3) then
+                                        for z, a in pairs(v:GetChildren()) do
+                                            if a:IsA("MeshPart") or a:IsA("Part") then
+                                                ImprovedTeleport(a.Position, ouwigaharaset.tspeed)
+                                            end
+                                        end
+                                    end
+                                elseif v.Name == "WisteriaPoisoning" then
+                                    local s2q = 0
+                                    for s1, s3 in pairs(game.Workspace.Mobs:GetChildren()) do
+                                        s2q += 1
+                                    end
+                                    if s2q >= 5 then
+                                        for z, a in pairs(v:GetChildren()) do
+                                            if a:IsA("MeshPart") or a:IsA("Part") then
+                                                ImprovedTeleport(a.Position, ouwigaharaset.tspeed)
+                                            end
+                                        end
+                                    end
+                                else
+                                    for z, a in pairs(v:GetChildren()) do
+                                        if a:IsA("MeshPart") or a:IsA("Part") then
+                                            ImprovedTeleport(a.Position, ouwigaharaset.tspeed)
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+
+    spawn(function()
+        while task.wait() do
+            if ouwigaharaset.autochest then
+                for _, v in pairs(game:GetService("Workspace").Debree:GetChildren()) do
+                    if v.Name == "Loot_Chest" then
+                        for _, c in pairs(v:FindFirstChild("Drops"):GetChildren()) do
+                            v["Add_To_Inventory"]:InvokeServer(c.Name)
+                            delay(0.5, function()
+                                c:Destroy()
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end)
+
+end

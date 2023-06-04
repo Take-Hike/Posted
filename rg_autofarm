@@ -1,0 +1,312 @@
+if game.CoreGui:FindFirstChild("FinityUI") then
+    game.CoreGui["FinityUI"]:Destroy()
+end
+
+getgenv().Settings = {
+    RGTweenSpeed = 100;
+    RGmobnme = "";
+    RGstage = "One";
+    RGautofarm = true;
+    RGautoe = false;
+    RGautor = false;
+    RGautof = false;
+    RGautoc = false;
+    RGLowRank = false;
+    RGMidRank = false;
+    RGHighRank = false;
+    RGKoutarouAmon = false;
+    RGNishikiNishio = false;
+    RGEtoYoshimura = false;
+}
+
+if not isfolder("TRXDENT") then
+    makefolder("TRXDENT")
+end
+
+local filename = "TRXDENT/RoGhoul.lua"
+
+function loadSettings()
+	print("Loading Settings")
+	local HttpService = game:GetService("HttpService");
+	if (readfile and isfile and isfile(filename)) then
+		getgenv().Settings = HttpService:JSONDecode(readfile(filename));
+	else
+		print("File Not Found")	
+	end
+end
+
+function saveSettings()
+	local Logsz;
+	local HttpService = game:GetService("HttpService");
+	if (writefile) then
+		Logsz = HttpService:JSONEncode(Settings);
+		writefile(filename, Logsz)
+	else
+		print("Windows Rejected Save Request")
+	end
+end
+
+local finityv2 = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenizAf4can/FinityV2/main/FinityV2"))()
+local finitymain = finityv2.new("blueforest", "TRXDENT", false)
+local FinityCredits = finitymain:Category("Credits")
+local FinityC1 = finitymain:Category("Ro-Ghoul")
+local FCreditsL1 = FinityCredits:Sector("Credits")
+local FC1L1 = FinityC1:Sector("Auto-Farm")
+local FC1L2 = FinityC1:Sector("Misc")
+local FC1L3 = FinityC1:Sector("Settings")
+
+-- Credits
+FCreditsL1:Cheat("Label","made by "..DCAD, function() end)
+FCreditsL1:Cheat("Button", "Copy Discord Server Link", function()
+	setclipboard("https://discord.gg/GgrQBzA3Z9")
+end)
+
+--FC1L1
+
+FC1L1:Cheat("Checkbox","Auto-Farm (Low Rank Aogiri Member)", function(Value)
+    Settings.RGLowRank = Value
+end)
+
+FC1L1:Cheat("Checkbox","Auto-Farm (Medium Rank Aogiri Member)", function(Value)
+    Settings.RGMidRank = Value
+end)
+
+FC1L1:Cheat("Checkbox","Auto-Farm (High Rank Aogiri Member)", function(Value)
+    Settings.RGHighRank = Value
+end)
+
+FC1L1:Cheat("Checkbox","Auto-Farm (Nishiki Nishio 250+)", function(Value)
+    Settings.RGNishikiNishio = Value
+end)
+
+FC1L1:Cheat("Checkbox","Auto-Farm (Koutarou Amon 750+)", function(Value)
+    Settings.RGKoutarouAmon = Value
+end)
+
+FC1L1:Cheat("Checkbox","Auto-Farm (Eto Yoshimura 1250+)", function(Value)
+    Settings.RGEtoYoshimura = Value
+end)
+
+--FC1L2
+FC1L2:Cheat("Checkbox","Auto Use Skill (E)", function(Value)
+    Settings.RGautoe = Value
+end)
+
+FC1L2:Cheat("Checkbox","Auto Use Skill (R)", function(Value)
+    Settings.RGautor = Value
+end)
+
+FC1L2:Cheat("Checkbox","Auto Use Skill (F)", function(Value)
+    Settings.RGautof = Value
+end)
+
+FC1L2:Cheat("Checkbox","Auto Use Skill (C)", function(Value)
+    Settings.RGautoc = Value
+end)
+
+FC1L2:Cheat("Dropdown", "Auto Open Kagune Stage", function(Option)
+    Settings.RGstage = Option
+	print("Stage option changed:", Option)
+end, {options = {"One","Two","Three","Four","Five","Six","Seven"}})
+
+FC1L2:Cheat("Slider", "Tween Speed", function(Value)
+    Settings.RGTweenSpeed = Value
+	print("TweenSpeed value changed:", Value)
+end, {min = 100, max = 500, suffix = " Tween Speed"})
+
+--FC1L3
+FC1L3:Cheat("Button","Save Settings", function()
+	saveSettings()
+end)
+
+FC1L3:Cheat("Button","Load Settings", function()
+	loadSettings()
+end)
+
+local get = setmetatable({}, {
+    __index = function(a, b)
+        return game:GetService(b) or game[b]
+    end
+})
+
+local findobj, findobjofclass, waitforobj, fire, invoke = get.FindFirstChild, get.FindFirstChildOfClass, get.WaitForChild, Instance.new("RemoteEvent").FireServer, Instance.new("RemoteFunction").InvokeServer
+local player = get.Players.LocalPlayer
+local player = game.Players.LocalPlayer
+
+-- Function
+
+local function useSKL()
+    spawn(function()
+        while wait(0.3) do
+            local remt =game.Players.LocalPlayer.Character:FindFirstChild("Remotes")
+            repeat
+                wait(0.3)
+            until remt
+            local keyev = remt:FindFirstChild("KeyEvent")
+            repeat
+                wait(0.2)
+            until keyev
+            if Settings.RGautoe == true then
+                local A_1 = "操你💦💔🍑👌💦操你💦💔🍑👌💦💔🍑👌💦💔🍑👌💔🍑👌💦💔🍑👌"
+                local A_2 = "E"
+                local A_3 = "Down"
+                local Event = player.Character.Remotes.KeyEvent
+                Event:FireServer(A_1, A_2, A_3)
+                wait(0.05)
+            end
+            if Settings.RGautor == true then
+                local A_1 = "操你💦💔🍑👌💦操你💦💔🍑👌💦💔🍑👌💦💔🍑👌💔🍑👌💦💔🍑👌"
+                local A_2 = "R"
+                local A_3 = "Down"
+                local Event = player.Character.Remotes.KeyEvent
+                Event:FireServer(A_1, A_2, A_3)
+                wait(0.05)
+            end
+            if Settings.RGautof == true then
+                local A_1 = "操你💦💔🍑👌💦操你💦💔🍑👌💦💔🍑👌💦💔🍑👌💔🍑👌💦💔🍑👌"
+                local A_2 = "F"
+                local A_3 = "Down"
+                local Event = player.Character.Remotes.KeyEvent
+                Event:FireServer(A_1, A_2, A_3)
+                wait(0.05)
+            end
+            if Settings.RGautoc == true then
+                local A_1 = "操你💦💔🍑👌💦操你💦💔🍑👌💦💔🍑👌💦💔🍑👌💔🍑👌💦💔🍑👌"
+                local A_2 = "C"
+                local A_3 = "Down"
+                local Event = player.Character.Remotes.KeyEvent
+                Event:FireServer(A_1, A_2, A_3)
+                wait(0.05)
+            end
+        end
+    end)
+end
+useSKL()
+
+local lp = game.Players.LocalPlayer
+local function getNPC()
+    local dist, thing = math.huge
+    for i,v in pairs(game:GetService("Workspace").NPCSpawns:GetDescendants()) do
+        if v.Name == "Nishiki Nishio" then
+            if Settings.RGNishikiNishio == true then
+                local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+                if mag < dist then 
+                    dist = mag 
+                    thing = v 
+                    Settings.RGmobnme = v.Name
+                end
+            end
+        end
+        if v.Name == "Koutarou Amon" then
+            if Settings.RGKoutarouAmon == true then
+                local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+                if mag < dist then 
+                    dist = mag 
+                    thing = v 
+                    Settings.RGmobnme = v.Name
+                end
+            end
+        end
+        if v.Name == "Eto Yoshimura" then
+            if Settings.RGEtoYoshimura == true then
+                local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+                if mag < dist then 
+                    dist = mag 
+                    thing = v 
+                    Settings.RGmobnme = v.Name
+                end
+            end
+        end
+        if v.Name == "Low Rank Aogiri Member" then
+            if Settings.RGLowRank == true then
+                local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+                if mag < dist then 
+                    dist = mag 
+                    thing = v 
+                    Settings.RGmobnme = v.Name
+                end
+            end
+        end
+        if v.Name == "Mid Rank Aogiri Member" then
+            if Settings.RGMidRank == true then
+                local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+                if mag < dist then 
+                    dist = mag 
+                    thing = v 
+                    Settings.RGmobnme = v.Name
+                end
+            end
+        end
+        if v.Name == "High Rank Aogiri Member" then
+            if Settings.RGHighRank == true then
+                local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+                if mag < dist then 
+                    dist = mag 
+                    thing = v 
+                    Settings.RGmobnme = v.Name
+                end
+            end
+        end
+    end
+    return thing
+end
+
+local function AuOp()
+    spawn(function()
+        while player.Character.Humanoid.Health > 0 and Settings.RGautofarm and wait(2) do
+            local kag = player.Character:FindFirstChild("Kagune")
+            local qui = player.Character:FindFirstChild("Quinque")
+            if not kag and not qui then
+                local A_1 = "操你💦💔🍑👌💦操你💦💔🍑👌💦💔🍑👌💦💔🍑👌💔🍑👌💦💔🍑👌"
+                 local A_2 = Settings.RGstage
+                local A_3 = "Down"
+                local Event = player.Character.Remotes.KeyEvent
+                Event:FireServer(A_1, A_2, A_3)
+                if kag or qui then return end
+            end
+        end
+    end)
+end
+
+AuOp()
+
+local TweenService  = game:GetService("TweenService")
+local noclipE       = false
+local antifall      = false
+
+local function noclip()
+    for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if v:IsA("BasePart") and v.CanCollide == true then
+            v.CanCollide = false
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+        end
+    end
+end
+
+local function moveto(obj, speed)
+    local info = TweenInfo.new(((game.Players.LocalPlayer.Character.HumanoidRootPart.Position - obj.Position).Magnitude)/ speed,Enum.EasingStyle.Linear)
+    local tween = TweenService:Create(game.Players.LocalPlayer.Character.HumanoidRootPart, info, {CFrame = obj})
+
+    if not game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
+        antifall = Instance.new("BodyVelocity", game.Players.LocalPlayer.Character.HumanoidRootPart)
+        antifall.Velocity = Vector3.new(0,0,0)
+        noclipE = game:GetService("RunService").Stepped:Connect(noclip)
+        tween:Play()
+    end
+        
+    tween.Completed:Connect(function()
+        antifall:Destroy()
+        noclipE:Disconnect()
+    end)
+end
+
+while true do wait()
+    if Settings.RGautofarm then
+        pcall(function()
+            moveto(getNPC().HumanoidRootPart.CFrame + Vector3.new(0,0,0), Settings.RGTweenSpeed)
+        end)
+        if getNPC():FindFirstChild(getNPC().Name.." Corpse") then
+            fireclickdetector(getNPC():FindFirstChild(getNPC().Name.." Corpse").ClickPart[""])
+        end
+    end
+end

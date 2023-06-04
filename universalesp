@@ -1,0 +1,362 @@
+local settings = {
+	enabled = false,
+	tracer = false,
+	tracercolor = Color3.fromHSV(0, 0.0, 1),
+	tracername = false,
+	boxesp = false,
+	boxhp = false,
+	boneesp = false,
+	chams = false,
+	fullbodychams = 1,
+	chamscolor = Color3.fromHSV(0, 0.0, 1),
+	rainbow = false,
+	teamcheck = false,
+	distancesp = false,
+	circlehead = false
+}
+
+if not isfolder("TRXDENT") then
+    makefolder("TRXDENT")
+end
+
+if not isfolder("TRXDENT/Premium") then
+    makefolder("TRXDENT/Premium")
+end
+
+local filename = "TRXDENT/Premium/Esp.lua"
+
+function loadSettings()
+	print("Loading Settings")
+	local HttpService = game:GetService("HttpService");
+	if (readfile and isfile and isfile(filename)) then
+		settings = HttpService:JSONDecode(readfile(filename));
+	else
+		print("File Not Found")	
+	end
+end
+
+function saveSettings()
+	local Logsz;
+	local HttpService = game:GetService("HttpService");
+	if (writefile) then
+		Logsz = HttpService:JSONEncode(settings);
+		writefile(filename, Logsz)
+	else
+		print("Windows Rejected Save Request")
+	end
+end
+
+--- Ayrac
+
+
+local lp = game.Players.LocalPlayer
+
+local finityv2 = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenizAf4can/FinityV2/main/FinityV2"))()
+local finitymain = finityv2.new("dark", "TRXDENT", false)
+local fcredits = finitymain:Category("Credits")
+local FCreditsL1 = fcredits:Sector("Credits")
+local FinityC1 = finitymain:Category("ESP")
+local FC1L_1 = FinityC1:Sector("Main")
+local FC1L1 = FinityC1:Sector("Tracer")
+local FC1L4 = FinityC1:Sector("Box Esp")
+local FC1L2 = FinityC1:Sector("Skeleton Esp")
+local FC1L3 = FinityC1:Sector("Chams")
+
+
+local camera = game:GetService("Workspace").CurrentCamera
+local CurrentCamera = workspace.CurrentCamera
+local worldToViewportPoint = CurrentCamera.worldToViewportPoint
+local HeadOff = Vector3.new(0, 0.5, 0)
+local LegOff = Vector3.new(0, 3, 0)
+
+function lineesptracer()
+	for i,v in pairs(game.Players:GetChildren()) do
+
+		-- Tracer
+		local Tracer = Drawing.new("Line")
+		Tracer.Visible = false
+		Tracer.Color = settings.tracercolor
+		Tracer.Thickness = 1
+		Tracer.Transparency = 1
+
+
+		-- Player Names
+		local text = Drawing.new("Text")
+		text.Text = v.Name
+		text.Color = settings.tracercolor
+		text.Outline = false
+		text.Visible = false
+		text.Size = 20 -- font size
+		text.Font = Drawing.Fonts.UI
+		text.Transparency = 1
+
+
+		-- Skeleton ESP
+		local skel_head = Drawing.new("Line")
+		skel_head.Visible = false
+		skel_head.Thickness = 1.5
+		skel_head.Color = Color3.fromRGB(255,255,255)
+
+		local skel_torso = Drawing.new("Line")
+		skel_torso.Visible = false
+		skel_torso.Thickness = 1.5
+		skel_torso.Color = Color3.fromRGB(255,255,255)
+
+		local skel_leftarm = Drawing.new("Line")
+		skel_leftarm.Visible = false
+		skel_leftarm.Thickness = 1.5
+		skel_leftarm.Color = Color3.fromRGB(255,255,255)
+
+		local skel_rightarm = Drawing.new("Line")
+		skel_rightarm.Visible = false
+		skel_rightarm.Thickness = 1.5
+		skel_rightarm.Color = Color3.fromRGB(255,255,255)
+
+		local skel_leftleg = Drawing.new("Line")
+		skel_leftleg.Visible = false
+		skel_leftleg.Thickness = 1.5
+		skel_leftleg.Color = Color3.fromRGB(255,255,255)
+
+		local skel_rightleg = Drawing.new("Line")
+		skel_rightleg.Visible = false
+		skel_rightleg.Thickness = 1.5
+		skel_rightleg.Color = Color3.fromRGB(255,255,255)
+
+		-- Box Esp
+		local BoxOutline = Drawing.new("Square")
+		BoxOutline.Visible = false
+		BoxOutline.Color = Color3.new(0,0,0)
+		BoxOutline.Thickness = 3
+		BoxOutline.Transparency = 1
+		BoxOutline.Filled = false
+
+		local Box = Drawing.new("Square")
+		Box.Visible = false
+		Box.Color = Color3.new(1,1,1)
+		Box.Thickness = 1
+		Box.Transparency = 1
+		Box.Filled = false
+
+
+		-- Health Bar
+		local HealthBarOutline = Drawing.new("Square")
+		HealthBarOutline.Thickness = 3
+		HealthBarOutline.Filled = false
+		HealthBarOutline.Color = Color3.new(0,0,0)
+		HealthBarOutline.Transparency = 1
+		HealthBarOutline.Visible = false
+
+		local HealthBar = Drawing.new("Square")
+		HealthBar.Thickness = 1
+		HealthBar.Filled = false
+		HealthBar.Transparency = 1
+		HealthBar.Visible = false
+		
+		
+		function lineesp()
+			game:GetService("RunService").RenderStepped:Connect(function()
+				if v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v~= lp and v.Character.Humanoid.Health > 0 then
+					local Vector, OnScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
+					local Vectorz, OnScreen = camera:worldToViewportPoint(v.Character.Head.Position)
+
+					local RootPart = v.Character.HumanoidRootPart
+					local Head = v.Character.Head
+					local RootPosition, RootVis = worldToViewportPoint(CurrentCamera, RootPart.Position)
+					local HeadPosition = worldToViewportPoint(CurrentCamera, Head.Position + HeadOff)
+					local LegPosition = worldToViewportPoint(CurrentCamera, RootPart.Position - LegOff)
+
+					local character_rootpart_3d = v.Character.HumanoidRootPart.Position
+					local character_rootpart_2d, rootpart_onscreen = camera:WorldToViewportPoint(character_rootpart_3d)
+
+					if OnScreen then
+						Tracer.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 1)
+						Tracer.To = Vector2.new(Vector.X, Vector.Y)
+						text.Position = Vector2.new(Vectorz.X, Vectorz.Y)
+
+						BoxOutline.Size = Vector2.new(1920 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+						BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+
+						Box.Size = Vector2.new(1920 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+						Box.Position = Vector2.new(RootPosition.X - Box.Size.X / 2, RootPosition.Y - Box.Size.Y / 2)
+
+						HealthBarOutline.Size = Vector2.new(2, HeadPosition.Y - LegPosition.Y)
+						HealthBarOutline.Position = BoxOutline.Position - Vector2.new(6,0)
+
+						HealthBar.Size = Vector2.new(2, (HeadPosition.Y - LegPosition.Y) / (v.Character.Humanoid.MaxHealth / math.clamp(v.Character.Humanoid.Health, 0, v.Character.Humanoid.MaxHealth)))
+						HealthBar.Position = Vector2.new(Box.Position.X - 6, Box.Position.Y + (1 / HealthBar.Size.Y))
+						HealthBar.Color = Color3.fromRGB(255 - 255 / (v.Character.Humanoid.MaxHealth / v.Character.Humanoid.Health), 255 / (v.Character.Humanoid.MaxHealth / v.Character.Humanoid.Health), 0)
+
+						if settings.teamcheck and v.TeamColor == lp.TeamColor then
+							--/ Teammates
+							Tracer.Visible = false
+							text.Visible = false
+							Box.Visible = false
+							BoxOutline.Visible = false
+							HealthBar.Visible = false
+							HealthBarOutline.Visible = false
+						else
+							--/ Enemies
+							Tracer.Visible = settings.tracer
+							text.Visible = settings.tracername
+							Box.Visible = settings.boxesp
+							BoxOutline.Visible = settings.boxesp
+							HealthBar.Visible = settings.boxhp
+							HealthBarOutline.Visible = settings.boxhp
+						end
+					else
+						text.Visible = false
+						Tracer.Visible = false
+						Box.Visible = false
+						BoxOutline.Visible = false
+						HealthBar.Visible = false
+						HealthBarOutline.Visible = false
+					end
+
+					if rootpart_onscreen and v.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+
+						local head_2d = camera:WorldToViewportPoint(v.Character.Head.Position)
+						local torso_upper_2d = camera:WorldToViewportPoint(v.Character.Torso.Position + Vector3.new(0,1,0))
+						local torso_lower_2d = camera:WorldToViewportPoint(v.Character.Torso.Position + Vector3.new(0,-1,0))
+						
+						local leftarm_2d = camera:WorldToViewportPoint(v.Character["Left Arm"].Position + Vector3.new(0,-1,0))
+						local rightarm_2d = camera:WorldToViewportPoint(v.Character["Right Arm"].Position + Vector3.new(0,-1,0))
+						local leftleg_2d = camera:WorldToViewportPoint(v.Character["Left Leg"].Position + Vector3.new(0,-1,0))
+						local rightleg_2d = camera:WorldToViewportPoint(v.Character["Right Leg"].Position + Vector3.new(0,-1,0))
+
+						skel_head.From = Vector2.new(head_2d.X, head_2d.Y)
+						skel_head.To = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+
+						skel_torso.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+						skel_torso.To = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
+						
+						skel_leftarm.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+						skel_leftarm.To = Vector2.new(leftarm_2d.X, leftarm_2d.Y)
+
+						skel_rightarm.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+						skel_rightarm.To = Vector2.new(rightarm_2d.X, rightarm_2d.Y)
+
+						skel_leftleg.From = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
+						skel_leftleg.To = Vector2.new(leftleg_2d.X, leftleg_2d.Y)
+
+						skel_rightleg.From = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
+						skel_rightleg.To = Vector2.new(rightleg_2d.X, rightleg_2d.Y)
+
+
+						if settings.teamcheck and v.TeamColor == lp.TeamColor then
+							--/ Teammates
+							skel_head.Visible = false
+							skel_torso.Visible = false
+							skel_leftarm.Visible = false
+							skel_rightarm.Visible = false
+							skel_leftleg.Visible = false
+							skel_rightleg.Visible = false
+						else
+							--/ Enemies
+							skel_head.Visible = settings.boneesp
+							skel_torso.Visible = settings.boneesp
+							skel_leftarm.Visible = settings.boneesp
+							skel_rightarm.Visible = settings.boneesp
+							skel_leftleg.Visible = settings.boneesp
+							skel_rightleg.Visible = settings.boneesp
+						end
+					elseif not rootpart_onscreen then
+
+						skel_head.Visible = false
+						skel_torso.Visible = false
+						skel_leftarm.Visible = false
+						skel_rightarm.Visible = false
+						skel_leftleg.Visible = false
+						skel_rightleg.Visible = false
+
+					end
+				end
+			end)
+		end
+		coroutine.wrap(lineesp)()
+	end
+end
+
+lineesptracer()
+
+function chmz(pla, color)
+	local highlight = Instance.new("Highlight", pla)
+	highlight.Name = "LickMyItchyBalls"
+	highlight.FillTransparency = settings.fullbodychams
+	highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	highlight.FillColor = color
+	highlight.OutlineColor = color
+	highlight.OutlineTransparency = 0
+	highlight.Enabled = true
+end
+
+function dechamz(pla)
+	if pla:FindFirstChild("LickMyItchyBalls") then
+		pla.LickMyItchyBalls:Destroy()
+	end
+end
+
+FC1L_1:Cheat("Button","Renew Drawings", function(z)
+	lineesptracer()
+end)
+
+FC1L_1:Cheat("Checkbox","Team Check", function(z)
+	settings.teamcheck = z
+end)
+
+FC1L1:Cheat("Checkbox","Enable Tracer", function(z)
+	settings.tracer = z
+end)
+
+FC1L1:Cheat("Checkbox","Show Names", function(z)
+	settings.tracername = z
+end)
+
+FC1L1:Cheat("Color","Tracer Color",function(cl)
+	settings.tracercolor = cl
+end)
+
+FC1L3:Cheat("Checkbox", "Enable Chams", function(z)
+	settings.chams = z
+	if z then
+		
+	else
+		for i,v in pairs(game.Players:GetChildren()) do
+			dechamz(v.Character)
+		end
+	end
+end)
+
+FC1L3:Cheat("Checkbox", "Fill Chams", function(z)
+	if z then
+		settings.fullbodychams = 0
+	else
+		settings.fullbodychams = 1
+	end
+end)
+
+FC1L3:Cheat("Color","Chams Color",function(cl)
+	settings.chamscolor = cl
+end)
+
+FC1L2:Cheat("Checkbox", "Enable Skeleton Esp (R6 Only)", function(z)
+	settings.boneesp = z
+end)
+
+FC1L4:Cheat("Checkbox","Box Esp", function(z)
+	settings.boxesp = z
+end)
+
+FC1L4:Cheat("Checkbox","Show Health", function(z)
+	settings.boxhp = z
+end)
+
+while true do wait(1)
+	for i,v in pairs(game.Players:GetChildren()) do
+		if settings.chams then
+			if v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v~= lp and v.Character.Humanoid.Health > 0 then
+				dechamz(v.Character)
+				chmz(v.Character,settings.chamscolor)
+			end
+		end
+	end
+end

@@ -1,9 +1,10 @@
 local http = game:GetService("HttpService")
-local link = game:HttpGet("https://raw.githubusercontent.com/Take-Hike/RandomThings/main/WHL2142948266")
+local link = game:HttpGet("https://raw.githubusercontent.com/Take-Hike/RandomThings/main/WHL")
 local data = http:JSONDecode(link)
 local pst = {
     ProjectSlayers = false
 }
+getgenv().DCAD = "Dxniz#1404";
 for i,v in pairs(data) do
     if v["ProjectSlayers"] ~= nil and i == game.Players.LocalPlayer.Name then
         pst.ProjectSlayers = true
@@ -14,7 +15,7 @@ if fastload ~= nil then
 	if fastload then
 		if game.PlaceId == 11468075017 or game.PlaceId == 11468159863 or game.PlaceId == 6152116144 or game.PlaceId == 5956785391 then
 			if pst.ProjectSlayers then
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Project_Slayers")))()
+				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/projectslayers")))()
 			end
 		end
 	else
@@ -22,7 +23,6 @@ if fastload ~= nil then
 			makefolder("TRXDENT")
 		end
 		
-		getgenv().DCAD = "Dxniz#1404";
 		getgenv().SecureMode = true
 		
 		local tpserv = game:GetService("TeleportService")
@@ -75,36 +75,19 @@ if fastload ~= nil then
 			end,
 		})
 		
-		-- Murder Mystery 2
-		local mm2 = Tab:CreateSection("Murder Mystery 2")
-		
-		local mm1 = Tab:CreateButton({
-			Name = "MM2 Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/MM2")))()
-			end,
-		})
-		
-		local tp1 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("142823291")
-			end,
-		})
-		
 		local roghoul = Tab:CreateSection("Ro-Ghoul")
 		
 		local rg1 = Tab:CreateButton({
 			Name = "Ro-Ghoul Look Player's Stats",
 			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Ro-Ghoul-Look")))()
+				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/rg_lookstats")))()
 			end,
 		})
 		
 		local rg2 = Tab:CreateButton({
 			Name = "Ro-Ghoul Gui",
 			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Ro-Ghoul-Autofarm")))()
+				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/rg_autofarm")))()
 			end,
 		})
 		
@@ -112,184 +95,6 @@ if fastload ~= nil then
 			Name = "Teleport",
 			Callback = function()
 				tpserv:Teleport("914010731")
-			end,
-		})
-		
-		-- Dragon Ball Final Remastered
-		local DBFR = Tab:CreateSection("Dragon Ball Final Remastered")
-		
-		local dbf1 = Tab:CreateButton({
-			Name = "DBFR Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/DragonBallFinalRemastered")))()
-			end,
-		})
-		
-		local tp3 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("298400657")
-			end,
-		})
-		
-		-- A Universal Time
-		
-		local AUT = Tab:CreateSection("A Universal Time")
-		
-		local aut1 = Tab:CreateButton({
-			Name = "A Universal Time Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/AUniversalTime")))()
-			end,
-		})
-		
-		local tp4 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("5130598377")
-			end,
-		})
-		
-		-- Natural Disaster Survival
-		
-		local NDS = Tab:CreateSection("Natural Disaster Survival")
-		
-		local nds1 = Tab:CreateButton({
-			Name = "Natural Disaster Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/NaturalDisasterSurvival")))()
-			end,
-		})
-		
-		local tp5 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("189707")
-			end,
-		})
-		
-		-- Evade
-		
-		local Evade = Tab:CreateSection("Evade")
-		
-		local evd1 = Tab:CreateButton({
-			Name = "Evade Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Evade")))()
-			end,
-		})
-		
-		local tp6 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("9872472334")
-			end,
-		})
-		
-		-- Retail Tycoon 2
-		
-		local RT2 = Tab:CreateSection("Retail Tycoon 2")
-		
-		local rt1 = Tab:CreateButton({
-			Name = "Retail Tycoon 2 Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/RetailTycoon2")))()
-			end,
-		})
-		
-		local tp7 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("5865858426")
-			end,
-		})
-		
-		-- Anime Evolution Simulator
-		
-		local AES = Tab:CreateSection("Anime Evolution Simulator")
-		
-		local aes1 = Tab:CreateButton({
-			Name = "Anime Evolution Sim Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/AnimeEvolutionSimulator")))()
-			end,
-		})
-		
-		local tp8 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("10723695195")
-			end,
-		})
-		
-		-- Roblox Is Unbreakable
-		
-		local RIU = Tab:CreateSection("Roblox Is Unbreakable")
-		
-		local riu1 = Tab:CreateButton({
-			Name = "Roblox Is Unbreakable Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/RobloxIsUnbreakable")))()
-			end,
-		})
-		
-		local tp9 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("6298464951")
-			end,
-		})
-		
-		-- MinerShaft
-		
-		local MinerShaft = Tab:CreateSection("MinerShaft")
-		
-		local msh1 = Tab:CreateButton({
-			Name = "MinerShaft Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/MinerShaft")))()
-			end,
-		})
-		
-		local tp10 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("11270995869")
-			end,
-		})
-		
-		-- Snow Shoveling Simulator
-		
-		local SSS = Tab:CreateSection("Snow Shoveling Sim")
-		
-		local msh1 = Tab:CreateButton({
-			Name = "Snow Shoveling Sim Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/SnowShovelingSimulator")))()
-			end,
-		})
-		
-		local tp10 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("1252559098")
-			end,
-		})
-		-- Steep Steps
-		
-		local SteepSteps = Tab:CreateSection("Steep Steps")
-		
-		local msh1 = Tab:CreateButton({
-			Name = "Steep Steps Gui",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/SteepSteps")))()
-			end,
-		})
-		
-		local tp10 = Tab:CreateButton({
-			Name = "Teleport",
-			Callback = function()
-				tpserv:Teleport("11606818992")
 			end,
 		})
 		
@@ -301,7 +106,22 @@ if fastload ~= nil then
 			Name = "Project Slayers",
 			Callback = function()
 				if pst.ProjectSlayers then
-					loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Project_Slayers")))()
+					loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/projectslayers")))()
+				else
+					Rayfield:Notify({
+						Title = "You are not whitelisted yet!",
+						Content = DCAD,
+						Duration = 10,
+						Image = 4483362458,
+						Actions = { -- Notification Buttons
+						   Ignore = {
+							  Name = "Okay!",
+							  Callback = function()
+							  print("ok")
+						   end
+						},
+					 },
+					})
 				end
 			end,
 		})
@@ -313,7 +133,7 @@ if fastload ~= nil then
 		Tabv2:CreateButton({
 			Name = "Esp",
 			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Premium%20Esp")))()
+				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/universalesp")))()
 			end
 		})
 		
@@ -324,14 +144,7 @@ if fastload ~= nil then
 		local other1 = Tab:CreateButton({
 			Name = "RemoteSpy",
 			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/RemoteSpy")))()
-			end,
-		})
-		
-		local other2 = Tab:CreateButton({
-			Name = "Smooth Aimlock",
-			Callback = function()
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/TRXDENT%20Aimlock")))()
+				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/remotespy")))()
 			end,
 		})
 		
@@ -341,7 +154,6 @@ else
 		makefolder("TRXDENT")
 	end
 	
-	getgenv().DCAD = "Dxniz#1404";
 	getgenv().SecureMode = true
 	
 	local tpserv = game:GetService("TeleportService")
@@ -394,36 +206,19 @@ else
 		end,
 	})
 	
-	-- Murder Mystery 2
-	local mm2 = Tab:CreateSection("Murder Mystery 2")
-	
-	local mm1 = Tab:CreateButton({
-		Name = "MM2 Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/MM2")))()
-		end,
-	})
-	
-	local tp1 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("142823291")
-		end,
-	})
-	
 	local roghoul = Tab:CreateSection("Ro-Ghoul")
 	
 	local rg1 = Tab:CreateButton({
 		Name = "Ro-Ghoul Look Player's Stats",
 		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Ro-Ghoul-Look")))()
+			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/rg_lookstats")))()
 		end,
 	})
 	
 	local rg2 = Tab:CreateButton({
 		Name = "Ro-Ghoul Gui",
 		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Ro-Ghoul-Autofarm")))()
+			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/rg_autofarm")))()
 		end,
 	})
 	
@@ -431,184 +226,6 @@ else
 		Name = "Teleport",
 		Callback = function()
 			tpserv:Teleport("914010731")
-		end,
-	})
-	
-	-- Dragon Ball Final Remastered
-	local DBFR = Tab:CreateSection("Dragon Ball Final Remastered")
-	
-	local dbf1 = Tab:CreateButton({
-		Name = "DBFR Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/DragonBallFinalRemastered")))()
-		end,
-	})
-	
-	local tp3 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("298400657")
-		end,
-	})
-	
-	-- A Universal Time
-	
-	local AUT = Tab:CreateSection("A Universal Time")
-	
-	local aut1 = Tab:CreateButton({
-		Name = "A Universal Time Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/AUniversalTime")))()
-		end,
-	})
-	
-	local tp4 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("5130598377")
-		end,
-	})
-	
-	-- Natural Disaster Survival
-	
-	local NDS = Tab:CreateSection("Natural Disaster Survival")
-	
-	local nds1 = Tab:CreateButton({
-		Name = "Natural Disaster Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/NaturalDisasterSurvival")))()
-		end,
-	})
-	
-	local tp5 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("189707")
-		end,
-	})
-	
-	-- Evade
-	
-	local Evade = Tab:CreateSection("Evade")
-	
-	local evd1 = Tab:CreateButton({
-		Name = "Evade Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Evade")))()
-		end,
-	})
-	
-	local tp6 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("9872472334")
-		end,
-	})
-	
-	-- Retail Tycoon 2
-	
-	local RT2 = Tab:CreateSection("Retail Tycoon 2")
-	
-	local rt1 = Tab:CreateButton({
-		Name = "Retail Tycoon 2 Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/RetailTycoon2")))()
-		end,
-	})
-	
-	local tp7 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("5865858426")
-		end,
-	})
-	
-	-- Anime Evolution Simulator
-	
-	local AES = Tab:CreateSection("Anime Evolution Simulator")
-	
-	local aes1 = Tab:CreateButton({
-		Name = "Anime Evolution Sim Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/AnimeEvolutionSimulator")))()
-		end,
-	})
-	
-	local tp8 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("10723695195")
-		end,
-	})
-	
-	-- Roblox Is Unbreakable
-	
-	local RIU = Tab:CreateSection("Roblox Is Unbreakable")
-	
-	local riu1 = Tab:CreateButton({
-		Name = "Roblox Is Unbreakable Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/RobloxIsUnbreakable")))()
-		end,
-	})
-	
-	local tp9 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("6298464951")
-		end,
-	})
-	
-	-- MinerShaft
-	
-	local MinerShaft = Tab:CreateSection("MinerShaft")
-	
-	local msh1 = Tab:CreateButton({
-		Name = "MinerShaft Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/MinerShaft")))()
-		end,
-	})
-	
-	local tp10 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("11270995869")
-		end,
-	})
-	
-	-- Snow Shoveling Simulator
-	
-	local SSS = Tab:CreateSection("Snow Shoveling Sim")
-	
-	local msh1 = Tab:CreateButton({
-		Name = "Snow Shoveling Sim Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/SnowShovelingSimulator")))()
-		end,
-	})
-	
-	local tp10 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("1252559098")
-		end,
-	})
-	-- Steep Steps
-	
-	local SteepSteps = Tab:CreateSection("Steep Steps")
-	
-	local msh1 = Tab:CreateButton({
-		Name = "Steep Steps Gui",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/SteepSteps")))()
-		end,
-	})
-	
-	local tp10 = Tab:CreateButton({
-		Name = "Teleport",
-		Callback = function()
-			tpserv:Teleport("11606818992")
 		end,
 	})
 	
@@ -620,7 +237,22 @@ else
 		Name = "Project Slayers",
 		Callback = function()
 			if pst.ProjectSlayers then
-				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Project_Slayers")))()
+				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/projectslayers")))()
+			else
+				Rayfield:Notify({
+					Title = "You are not whitelisted yet!",
+					Content = DCAD,
+					Duration = 10,
+					Image = 4483362458,
+					Actions = { -- Notification Buttons
+					   Ignore = {
+						  Name = "Okay!",
+						  Callback = function()
+						  print("ok")
+					   end
+					},
+				 },
+				})
 			end
 		end,
 	})
@@ -632,7 +264,7 @@ else
 	Tabv2:CreateButton({
 		Name = "Esp",
 		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/Premium%20Esp")))()
+			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/universalesp")))()
 		end
 	})
 	
@@ -643,15 +275,8 @@ else
 	local other1 = Tab:CreateButton({
 		Name = "RemoteSpy",
 		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/RemoteSpy")))()
+			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/remotespy")))()
 		end,
 	})
-	
-	local other2 = Tab:CreateButton({
-		Name = "Smooth Aimlock",
-		Callback = function()
-			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/DxnizA/TRXDENT/main/TRXDENT%20Aimlock")))()
-		end,
-	})
-	
+
 end

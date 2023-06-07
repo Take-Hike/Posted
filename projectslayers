@@ -10,7 +10,9 @@ if not isfolder("TRXDENT") then
 end
 
 -- Anti - Sun damage
-xScript.GetLocalPlayer().PlayerScripts.Small_Scripts.Gameplay.Sun_Damage.Disabled = true
+if xScript.GetLocalPlayer().PlayerScripts.Small_Scripts.Gameplay.Sun_Damage then
+    xScript.GetLocalPlayer().PlayerScripts.Small_Scripts.Gameplay.Sun_Damage.Disabled = true
+end
 
 function givealltitles()
     for i,v in pairs(xScript.GetLocalPlayer()["Player_Titles_List"]:GetChildren()) do
@@ -63,7 +65,7 @@ local function ImprovedTeleport(Target, TeleportSpeed)
         local MappedPosition = StartingPosition + (PositionDelta * Progress);
         HRP.Velocity = Vector3.new();--Resetting the effect of gravity so it doesn't get too much and drag the player below the ground.
         HRP.CFrame = CFrame.new(MappedPosition);
-    until (HRP.Position - Target).magnitude <= TeleportSpeed / 2;
+    until (HRP.Position - Target).magnitude <= TeleportSpeed / 1.1;
     HRP.Anchored = false;
     HRP.CFrame = CFrame.new(Target);
 end;
@@ -71,6 +73,7 @@ end;
 -- Settings
 
 getgenv().maponeset = {
+    autoquest = false,
     farmlocation = "Above",
     farmstud = 60,
     killaura = false,
@@ -104,6 +107,7 @@ getgenv().maponeset = {
 }
 
 getgenv().maptwoset = {
+    autoquest = false,
     farmlocation = "Above",
     farmstud = 60,
     killaura = false,
@@ -318,7 +322,7 @@ if game.PlaceId == 6152116144 then
     local progress = mainc:Sector("Progression")
     local msettings = mainc:Sector("Settings")
     local rmobdr
-
+    local currentquest
     local sgourd = nil
 
     -- Main
@@ -396,14 +400,6 @@ if game.PlaceId == 6152116144 then
         maponeset.bslspeed = q
     end, {min = 100, max = 400, suffix = "  Speed", default = maponeset.bslspeed})
 
-    -- Other
-
-    other:Cheat("Button","Remove Map", function(q)
-        for i,v in pairs(game.Workspace.Map:GetChildren()) do
-            v:Destroy()
-        end
-    end, {text = "Remove"})
-
     other:Cheat("Button","Low Graphics", function(q)
         for i,v in pairs(game.Workspace.Map:GetDescendants()) do
             if v:IsA("Part") then
@@ -475,7 +471,27 @@ if game.PlaceId == 6152116144 then
             end
         end
     end)
+
+    other2:Cheat("Checkbox","Auto Quest", function(q)
+        maponeset.autoquest = q
+    end, {default = maponeset.autoquest})
     
+    game.ReplicatedStorage["Muzan_Quests"][game.Players.LocalPlayer.Name].ChildAdded:Connect(function(folder)
+        if maponeset.autoquest and string.sub(folder.Name, 0, 10) == "Eliminate " then
+            table.clear(maponeset.selectedmobs)
+            game:GetService("ReplicatedStorage").Remotes.To_Server.muzan_quest_ting:FireServer(string.sub(folder.Name, 10, -1), "Do")
+            table.insert(maponeset.selectedmobs, string.sub(folder.Name, 10, -1))
+        end
+    end)
+        
+    game.ReplicatedStorage["Crow_Quests"][game.Players.LocalPlayer.Name].ChildAdded:Connect(function(folder)
+        if maponeset.autoquest and string.sub(folder.Name, 0, 7) == "Defeat " then
+            table.clear(maponeset.selectedmobs)
+            game:GetService("ReplicatedStorage").Remotes.To_Server.crow_quest_ting:FireServer(string.sub(folder.Name, 7, -1), "Do")
+            table.insert(maponeset.selectedmobs, string.sub(folder.Name, 7, -1))
+        end
+    end)
+
     other2:Cheat("TextBox", "Custom Title (Client)", function(q)
         xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value = q
     end, {placeholder = xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value})
@@ -551,11 +567,11 @@ if game.PlaceId == 6152116144 then
     local breathingpr = progress:Cheat("Label", "Breathing Progress [ "..getprogress()["Breathing"].."% ]")
     local demonpr = progress:Cheat("Label", "Demon Progress [ "..getprogress()["Demon"].."% ]")
 
-    game.ReplicatedStorage["Player_Data"][game.Players.LocalPlayer.Name].BreathingProgress["1"].Value.Changed:Connect(function()
+    game.ReplicatedStorage["Player_Data"][game.Players.LocalPlayer.Name].BreathingProgress["1"].Changed:Connect(function()
         breathingpr:EditText("Breathing Progress [ "..getprogress()["Breathing"].."% ]")
     end)
 
-    game.ReplicatedStorage["Player_Data"][game.Players.LocalPlayer.Name].DemonProgress["1"].Value.Changed:Connect(function()
+    game.ReplicatedStorage["Player_Data"][game.Players.LocalPlayer.Name].DemonProgress["1"].Changed:Connect(function()
         demonpr:EditText("Demon Progress [ "..getprogress()["Demon"].."% ]")
     end)
 
@@ -718,7 +734,6 @@ if game.PlaceId == 6152116144 then
                 repeat
                     wait(0.5)
                     mob = getclosestmob()
-                    if not maponeset.autofarm then return end
                 until mob ~= nil
                 if maponeset.autoblock then
                     local A_1 = "add_blocking"
@@ -729,23 +744,27 @@ if game.PlaceId == 6152116144 then
                     local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
                     Event:FireServer(A_1, A_2, A_3, A_4, A_5)
                 end
-                ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
-                if kasdqw then
-                    repeat
-                        wait(0.01)
-                        ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,0,0), maponeset.tspeed)
-                    until not kasdqw
+                if mob ~= "a" and mob:FindFirstChild("HumanoidRootPart") then   
                 else
-                    repeat
-                        wait(0.01)
-                        if maponeset.farmlocation == "Above" then
-                            ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
-                        elseif maponeset.farmlocation == "Under" then
-                            ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,-maponeset.farmstud,0), maponeset.tspeed)
-                        end
-                        if not maponeset.autofarm then return end
-                    until kasdqw
+                    ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
                 end
+                pcall(function()
+                    if kasdqw then
+                        repeat
+                            wait(0.01)
+                            ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,0,0), maponeset.tspeed)
+                        until not kasdqw
+                    else
+                        repeat
+                            wait(0.01)
+                            if maponeset.farmlocation == "Above" then
+                                ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
+                            elseif maponeset.farmlocation == "Under" then
+                                ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,-maponeset.farmstud,0), maponeset.tspeed)
+                            end
+                        until kasdqw
+                    end
+                end)
             end
         end
     end)
@@ -942,7 +961,7 @@ if game.PlaceId == 11468159863 then
         end
         rmobdr:RemoveOptionAll()
         rmobdr:AddOptions(maptwoset.selectedmobs)
-    end, {options = {"Yowai Demon","Thief","Nomay Bandit","Civilian","Heikin Demon","Slasher","Nomay Bandit Boss","Sound Trainee","Snow Trainee","Inosuke","Renpeke","Muichiro Tokito","Enme","Swampy","Rengoku","Akeza","Douma","Tengen"}, default = ""})
+    end, {options = maptwoset.selectedmobs, default = ""})
 
     mains:Cheat("Dropdown","Location", function(q)
         maptwoset.farmlocation = q
@@ -955,14 +974,6 @@ if game.PlaceId == 11468159863 then
     mains:Cheat("Slider","Tween Speed", function(q)
         maptwoset.tspeed = q
     end, {min = 100, max = 500, suffix = "  Speed", default = maptwoset.tspeed})
-
-    -- Other
-
-    other:Cheat("Button","Remove Map", function(q)
-        for i,v in pairs(game.Workspace.Map:GetChildren()) do
-            v:Destroy()
-        end
-    end, {text = "Remove"})
 
     other:Cheat("Button","Low Graphics", function(q)
         for i,v in pairs(game.Workspace.Map:GetDescendants()) do
@@ -1027,7 +1038,27 @@ if game.PlaceId == 11468159863 then
             end
         end
     end)
+
+    other:Cheat("Checkbox","Auto Quest", function(q)
+        maptwoset.autoquest = q
+    end, {default = maptwoset.autoquest})
     
+    game.ReplicatedStorage["Muzan_Quests"][game.Players.LocalPlayer.Name].ChildAdded:Connect(function(folder)
+        if maptwoset.autoquest then
+            table.clear(maptwoset.selectedmobs)
+            game:GetService("ReplicatedStorage").Remotes.To_Server.muzan_quest_ting:FireServer(string.sub(folder.Name, 10, -1), "Do")
+            table.insert(maptwoset.selectedmobs, string.sub(folder.Name, 10, -1))
+        end
+    end)
+        
+    game.ReplicatedStorage["Crow_Quests"][game.Players.LocalPlayer.Name].ChildAdded:Connect(function(folder)
+        if maptwoset.autoquest then
+            table.clear(maptwoset.selectedmobs)
+            game:GetService("ReplicatedStorage").Remotes.To_Server.crow_quest_ting:FireServer(string.sub(folder.Name, 7, -1), "Do")
+            table.insert(maptwoset.selectedmobs, string.sub(folder.Name, 7, -1))
+        end
+    end)
+
     other:Cheat("TextBox", "Custom Title (Client)", function(q)
         xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value = q
     end, {placeholder = xScript.GetLocalPlayer().Player_Titles_List.Equipped_Title.Value})
@@ -1202,6 +1233,8 @@ if game.PlaceId == 11468159863 then
         end
     end)
 
+    
+
     spawn(function()
         while true do wait(0)
             if maptwoset.infsb then
@@ -1259,11 +1292,11 @@ if game.PlaceId == 11468159863 then
     msettings:Cheat("Button","Load Settings", function()
         loadSettings()
     end, {text = "Load"}) 
-    local moblist = {"Akeza"}
+
     function getclosestmob()
         local ret = {nil, math.huge} 
-        for i,v in pairs(workspace.Mobs:GetDescendants()) do
-            for _, h in pairs(moblist) do
+        for i,v in pairs(game.Workspace.Mobs:GetDescendants()) do
+            for _, h in pairs(maptwoset.selectedmobs) do
                 if v:IsA("Model") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v.Name == h then 
                     local magnitude = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.WorldPivot.Position).Magnitude 
                     if magnitude < ret[2] then 
@@ -1284,19 +1317,24 @@ if game.PlaceId == 11468159863 then
         end
    end)
 
+   spawn(function()
+        while true do wait(2)
+            if maptwoset.autowardrums then
+                local A_1 = true
+                local Event = game:GetService("ReplicatedStorage").Remotes["war_Drums_remote"]
+                Event:FireServer(A_1)
+            end
+        end
+   end)
+
     spawn(function()
         while true do wait()
             if maptwoset.autofarm then
-                if maptwoset.autowardrums then
-                    local A_1 = true
-                    local Event = game:GetService("ReplicatedStorage").Remotes["war_Drums_remote"]
-                    Event:FireServer(A_1)
-                end
+                
                 local mob = getclosestmob()
                 repeat
                     wait(0.25)
                     mob = getclosestmob()
-                    if not maptwoset.autofarm then mob = "" end
                 until mob ~= nil
                 if maptwoset.autoblock then
                     local A_1 = "add_blocking"
@@ -1307,32 +1345,26 @@ if game.PlaceId == 11468159863 then
                     local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
                     Event:FireServer(A_1, A_2, A_3, A_4, A_5)
                 end
-                pcall(function()
-                    if mob ~= "" then
-                        if mob:FindFirstChild("HumanoidRootPart") then
-                            
-                        else
-                            ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
+                if mob:FindFirstChild("HumanoidRootPart") then
+                        
+                else
+                    ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
+                end
+                if kasdqw then
+                    repeat
+                        wait(0.01)
+                        ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,0,0), maptwoset.tspeed)
+                    until not kasdqw
+                else
+                    repeat
+                        wait(0.01)
+                        if maptwoset.farmlocation == "Above" then
+                            ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
+                        elseif maptwoset.farmlocation == "Under" then
+                            ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,-maptwoset.farmstud,0), maptwoset.tspeed)
                         end
-                        if kasdqw then
-                            repeat
-                                wait(0.01)
-                                ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,0,0), maptwoset.tspeed)
-                            until not kasdqw
-                        else
-                            local ksadasd = ""
-                            repeat
-                                wait(0.01)
-                                if maptwoset.farmlocation == "Above" then
-                                    ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
-                                elseif maptwoset.farmlocation == "Under" then
-                                    ImprovedTeleport(mob.HumanoidRootPart.Position + Vector3.new(0,-maptwoset.farmstud,0), maptwoset.tspeed)
-                                end
-                                if not maptwoset.autofarm then ksadasd = "a" end
-                            until kasdqw or ksadasd ~= ""
-                        end
-                    end
-                end)
+                    until kasdqw
+                end
             end
         end
     end)
@@ -1445,9 +1477,8 @@ if game.PlaceId == 11468034852 then
             if mugentrainset.autofarm then
                 local mob = getclosestmob()
                 repeat
-                    wait(0.25)
+                    wait(0.10)
                     mob = getclosestmob()
-                    if not mugentrainset.autofarm then return end
                 until mob ~= nil
                 if mugentrainset.autoblock then
                     local A_1 = "add_blocking"
@@ -1463,7 +1494,7 @@ if game.PlaceId == 11468034852 then
                     if kasdqw then
                         repeat
                             wait(0.01)
-                            ImprovedTeleport(mob:GetPrimaryPartCFrame().Position + Vector3.new(0,0,0), ouwigaharaset.tspeed)
+                            ImprovedTeleport(mob:GetPrimaryPartCFrame().Position + Vector3.new(0,0,0), mugentrainset.tspeed)
                         until not kasdqw
                     else
                         repeat
@@ -1473,7 +1504,6 @@ if game.PlaceId == 11468034852 then
                             elseif mugentrainset.farmlocation == "Under" then
                                 ImprovedTeleport(mob:GetPrimaryPartCFrame().Position + Vector3.new(0,-mugentrainset.farmstud,0), mugentrainset.tspeed)
                             end
-                            if not mugentrainset.autofarm then return end
                         until kasdqw
                     end
                 end)
@@ -1786,7 +1816,6 @@ if game.PlaceId == 11468075017 then
                 repeat
                     wait(0.25)
                     mob = getclosestmob()
-                    if not ouwigaharaset.autofarm then return end
                 until mob ~= nil
                 if ouwigaharaset.autoblock then
                     local A_1 = "add_blocking"
@@ -1812,7 +1841,6 @@ if game.PlaceId == 11468075017 then
                             elseif ouwigaharaset.farmlocation == "Under" then
                                 ImprovedTeleport(mob:GetPrimaryPartCFrame().Position + Vector3.new(0,-ouwigaharaset.farmstud,0), ouwigaharaset.tspeed)
                             end
-                            if not ouwigaharaset.autofarm then return end
                         until kasdqw
                     end
                 end)

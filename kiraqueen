@@ -1,0 +1,268 @@
+local autset = {
+    autofarm = {},
+    autoskill = {},
+    holdskill = {
+        ["E"] = 0.1,
+        ["R"] = 0.1,
+        ["T"] = 0.1,
+        ["Y"] = 0.1,
+        ["G"] = 0.1,
+        ["F"] = 0.1,
+        ["H"] = 0.1,
+        ["J"] = 0.1,
+        ["X"] = 0.1
+    }
+}
+
+local bb = game:GetService("VirtualUser")
+game.Players.LocalPlayer.Idled:Connect(function()
+    bb:CaptureController()
+    bb:ClickButton2(Vector2.new())
+end)
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local erdfbhdrxej = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-455.85, 924.121, 780.407)
+wait(0.5)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-36.7518692, 1046.91016, -928.941528, -0.999232292, 1.07985656e-08, 0.0391772427, 1.13713545e-08, 1, 1.43976218e-08, -0.0391772427, 1.48320662e-08, -0.999232292)
+wait(0.5)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-60.353054, 925.981873, -1881.24353, 0.9751333, -3.09746753e-08, 0.221619114, 1.35027172e-08, 1, 8.03528408e-08, -0.221619114, -7.53622729e-08, 0.9751333)
+wait(0.5)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(erdfbhdrxej)
+
+
+Rayfield:Notify({
+    Title = "Loaded Map.",
+    Content = "",
+    Duration = 15,
+    Image = 4483362458,
+    Actions = { -- Notification Buttons
+       Ignore = {
+          Name = "Okay!",
+          Callback = function()
+       end
+    },
+ },
+})
+
+local Window = Rayfield:CreateWindow({
+    Name = "TRXDENT - A Universal Time",
+    LoadingTitle = "TRXDENT - A Universal Time",
+    LoadingSubtitle = "by Dxniz#1404",
+    ConfigurationSaving = {
+       Enabled = false,
+       FolderName = nil, -- Create a custom folder for your hub/game
+       FileName = "Big Hub"
+    },
+    Discord = {
+       Enabled = true,
+       Invite = "GgrQBzA3Z9", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+       RememberJoins = false -- Set this to false to make them join the discord every time they load it up
+    },
+    KeySystem = false, -- Set this to true to use our key system
+    KeySettings = {
+       Title = "Untitled",
+       Subtitle = "Key System",
+       Note = "No method of obtaining the key is provided",
+       FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+       SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+       GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+       Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+    }
+ })
+
+local Main = Window:CreateTab("Main", 4483362458) -- Title, Image
+local AutoSkills = Window:CreateTab("Auto Skills", 4483362458) -- Title, Image
+local Teleport = Window:CreateTab("Teleport", 4483362458) -- Title, Image
+
+Main:CreateDropdown({
+    Name = "Auto Farm",
+    Options = {"Ground","Chest","Debris","Meteor"},
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "Dropdown1",
+    Callback = function(Option)
+        autset.autofarm = Option
+    end,
+})
+
+AutoSkills:CreateDropdown({
+    Name = "Select Skills",
+    Options = {"E","R","T","Y","G","F","X","H","J"},
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "Dropdown2",
+    Callback = function(Option)
+        autset.autoskill = Option
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold E For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["E"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold R For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["R"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold T For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["T"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold Y For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["Y"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold G For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["G"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold F For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["F"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold X For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["X"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold H For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["H"] = Value
+    end,
+})
+
+AutoSkills:CreateSlider({
+    Name = "Hold J For",
+    Range = {0, 5},
+    Increment = 0.1,
+    Suffix = "Seconds",
+    CurrentValue = 0.1,
+    Flag = "Slider1",
+    Callback = function(Value)
+        autset.holdskill["J"] = Value
+    end,
+})
+
+spawn(function()
+    while true do wait(0.5)
+        local is = workspace.ItemSpawns
+        if table.find(autset.autofarm, "Chest", 4) ~= nil then
+            for i,v in pairs(is.Chests:GetChildren()) do
+                if v:FindFirstChild("Chest") then
+                    for a,b in pairs(v.Chest:GetDescendants()) do
+                       if b.Name == "Interaction" then
+                           game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Chest:GetPrimaryPartCFrame())
+                           fireproximityprompt(b, 1, true)
+                       end
+                    end
+                end
+            end
+        elseif table.find(autset.autofarm, "Debris", 4) ~= nil then
+            for i,v in pairs(is["Sand Debris"]:GetChildren()) do
+                if v:FindFirstChild("SandDebris") then
+                    for a,b in pairs(v.SandDebris:GetDescendants()) do
+                        if b.Name == "Interaction" then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.SandDebris.Position)
+                            fireproximityprompt(b, 1, true)
+                        end
+                    end
+                end
+            end
+        elseif table.find(autset.autofarm, "Ground", 4) ~= nil then
+            for i,v in pairs(is["StandardItems"]:GetChildren()) do
+                if #v:GetChildren() > 0 then
+                    for a,b in pairs(v:GetChildren()) do
+                        for i2,v2 in pairs(b:GetDescendants()) do
+                            if v2.Name == "Interaction" then
+                                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
+                                fireproximityprompt(v2, 1, true)
+                            end
+                        end
+                    end
+                end
+            end
+        elseif table.find(autset.autofarm, "Meteor", 4) ~= nil then
+            for i,v in pairs(is["Meteors"]:GetChildren()) do
+                if v:FindFirstChild("Meteor") then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Meteor.Position)
+                    if v.ProximityAttachment:FindFirstChild("Interaction") then
+                        fireproximityprompt(v.ProximityAttachment.Interaction, 1, true)
+                    end
+                end
+            end
+        end
+    end
+end)
+
+spawn(function()
+    while true do wait(2)
+        for i,v in pairs(autset.autoskill) do
+            game:GetService("ReplicatedStorage"):WaitForChild("ReplicatedModules"):WaitForChild("KnitPackage"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("MoveInputService"):WaitForChild("RF"):WaitForChild("FireInput"):InvokeServer(v)
+            wait(autset.holdskill[v])
+            game:GetService("ReplicatedStorage"):WaitForChild("ReplicatedModules"):WaitForChild("KnitPackage"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("MoveInputService"):WaitForChild("RF"):WaitForChild("FireInput"):InvokeServer("END-"..v)
+        end
+    end
+end)

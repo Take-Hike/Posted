@@ -125,6 +125,15 @@ if fastload ~= nil then
 				end
 			end,
 		})
+
+		Tabv2:CreateSection("A Universal Time")
+		
+		Tabv2:CreateButton({
+			Name = "A Universal Time",
+			Callback = function()
+				loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/kiraqueen")))()
+			end,
+		})
 		
 		-- Esp
 		
@@ -257,6 +266,15 @@ else
 		end,
 	})
 	
+    Tabv2:CreateSection("A Universal Time")
+		
+	Tabv2:CreateButton({
+		Name = "A Universal Time",
+		Callback = function()
+			loadstring(game:HttpGetAsync(("https://raw.githubusercontent.com/Take-Hike/Posted/main/kiraqueen")))()
+		end,
+	})
+
 	-- Esp
 	
 	Tabv2:CreateSection("Universal Esp")

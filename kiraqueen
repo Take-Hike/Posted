@@ -1,6 +1,12 @@
 local autset = {
-    autofarm = {},
+    autofarm = {
+        ground = false,
+        chest = false,
+        debris = false,
+        meteor = false
+    },
     autoskill = {},
+    autosafe = false,
     holdskill = {
         ["E"] = 0.1,
         ["R"] = 0.1,
@@ -21,8 +27,8 @@ game.Players.LocalPlayer.Idled:Connect(function()
 end)
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-local erdfbhdrxej = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-
+local erdfbhdrxej
+erdfbhdrxej = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-455.85, 924.121, 780.407)
 wait(0.5)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-36.7518692, 1046.91016, -928.941528, -0.999232292, 1.07985656e-08, 0.0391772427, 1.13713545e-08, 1, 1.43976218e-08, -0.0391772427, 1.48320662e-08, -0.999232292)
@@ -76,14 +82,48 @@ local Main = Window:CreateTab("Main", 4483362458) -- Title, Image
 local AutoSkills = Window:CreateTab("Auto Skills", 4483362458) -- Title, Image
 local Teleport = Window:CreateTab("Teleport", 4483362458) -- Title, Image
 
-Main:CreateDropdown({
-    Name = "Auto Farm",
-    Options = {"Ground","Chest","Debris","Meteor"},
-    CurrentOption = {},
-    MultipleOptions = true,
-    Flag = "Dropdown1",
-    Callback = function(Option)
-        autset.autofarm = Option
+Main:CreateToggle({
+    Name = "Auto Farm ( Chest )",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        autset.autofarm.chest = Value
+    end,
+})
+
+Main:CreateToggle({
+    Name = "Auto Farm ( Ground )",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        autset.autofarm.ground = Value
+    end,
+})
+
+Main:CreateToggle({
+    Name = "Auto Farm ( Debris )",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        autset.autofarm.debris = Value
+    end,
+})
+
+Main:CreateToggle({
+    Name = "Auto Farm ( Meteor )",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        autset.autofarm.meteor = Value
+    end,
+})
+
+Main:CreateToggle({
+    Name = "Auto teleport to safe zone",
+    CurrentValue = false,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        autset.autosafe = Value
     end,
 })
 
@@ -206,21 +246,49 @@ AutoSkills:CreateSlider({
     end,
 })
 
+Teleport:CreateButton({
+    Name = "Mansion ( Dio )",
+    Callback = function()
+        game.Players.LocalPlayer.HumanoidRootPart.CFrame = CFrame.new(686.581298828125, 1164.6793212890625, -495.5419921875)
+    end,
+})
+
+Teleport:CreateButton({
+    Name = "Temple ( Diavolo )",
+    Callback = function()
+        game.Players.LocalPlayer.HumanoidRootPart.CFrame = CFrame.new(-200.25155639648438, 922.7275390625, 1026.2716064453125)
+    end,
+})
+
+Teleport:CreateButton({
+    Name = "Boa Hancock's Island ( Boa H )",
+    Callback = function()
+        game.Players.LocalPlayer.HumanoidRootPart.CFrame = CFrame.new(11062.6533, 954.30835, 15120.6396)
+    end,
+})
+
+function safe()
+    if autset.autosafe then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(686.581298828125, 1164.6793212890625, -495.5419921875)
+   end
+end
+
 spawn(function()
     while true do wait(0.5)
         local is = workspace.ItemSpawns
-        if table.find(autset.autofarm, "Chest", 4) ~= nil then
+        if autset.autofarm.chest then
             for i,v in pairs(is.Chests:GetChildren()) do
                 if v:FindFirstChild("Chest") then
                     for a,b in pairs(v.Chest:GetDescendants()) do
                        if b.Name == "Interaction" then
-                           game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Chest:GetPrimaryPartCFrame())
+                           game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Chest.RootPart.CFrame
                            fireproximityprompt(b, 1, true)
                        end
                     end
                 end
             end
-        elseif table.find(autset.autofarm, "Debris", 4) ~= nil then
+        end
+        if autset.autofarm.debris then
             for i,v in pairs(is["Sand Debris"]:GetChildren()) do
                 if v:FindFirstChild("SandDebris") then
                     for a,b in pairs(v.SandDebris:GetDescendants()) do
@@ -231,7 +299,8 @@ spawn(function()
                     end
                 end
             end
-        elseif table.find(autset.autofarm, "Ground", 4) ~= nil then
+        end
+        if autset.autofarm.ground then
             for i,v in pairs(is["StandardItems"]:GetChildren()) do
                 if #v:GetChildren() > 0 then
                     for a,b in pairs(v:GetChildren()) do
@@ -244,7 +313,8 @@ spawn(function()
                     end
                 end
             end
-        elseif table.find(autset.autofarm, "Meteor", 4) ~= nil then
+        end
+        if autset.autofarm.meteor then
             for i,v in pairs(is["Meteors"]:GetChildren()) do
                 if v:FindFirstChild("Meteor") then
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Meteor.Position)
@@ -254,6 +324,7 @@ spawn(function()
                 end
             end
         end
+        safe()
     end
 end)
 

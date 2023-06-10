@@ -715,7 +715,7 @@ if game.PlaceId == 6152116144 then
    end)
 
    spawn(function()
-        while true do wait(2)
+        while true do wait(1.3)
             if maponeset.killaura then
                 killauraa(maponeset.killauratype)
             end
@@ -1309,7 +1309,7 @@ if game.PlaceId == 11468159863 then
     end
 
     spawn(function()
-        while true do wait(2)
+        while true do wait(1.3)
             if maptwoset.killaura then
                 killauraa(maptwoset.killauratype)
             end
@@ -1467,7 +1467,7 @@ if game.PlaceId == 11468034852 then
     end 
     
     spawn(function()
-        while true do wait(2)
+        while true do wait(1.3)
             if mugentrainset.killaura then
                 killauraa(mugentrainset.killauratype)
             end
@@ -1796,7 +1796,7 @@ if game.PlaceId == 11468075017 then
     end 
     
     spawn(function()
-        while true do wait(2)
+        while true do wait(1.3)
             if ouwigaharaset.killaura then
                 killauraa(ouwigaharaset.killauratype)
             end

@@ -1,5 +1,3 @@
-local TeleportService = game:GetService("TeleportService")
-
 getgenv().xScript = {
     Extensions = {""}
 }
@@ -65,7 +63,7 @@ local function ImprovedTeleport(Target, TeleportSpeed)
         local MappedPosition = StartingPosition + (PositionDelta * Progress);
         HRP.Velocity = Vector3.new();--Resetting the effect of gravity so it doesn't get too much and drag the player below the ground.
         HRP.CFrame = CFrame.new(MappedPosition);
-    until (HRP.Position - Target).magnitude <= TeleportSpeed / 1.1;
+    until (HRP.Position - Target).magnitude <= TeleportSpeed;
     HRP.Anchored = false;
     HRP.CFrame = CFrame.new(Target);
 end;
@@ -226,25 +224,22 @@ function killauraa(type)
         local z = 0
         kasdqw = true
         wait(0.5)
-        repeat
-            local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
-            local A_6 = 1
-            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
-            wait(0.01)
-            local A_6 = 2
-            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
-            wait(0.01)
-            local A_6 = 3
-            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
-            wait(0.01)
-            local A_6 = 4
-            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
-            wait(0.01)
-            local A_6 = 919
-            Event:FireServer(A_1, A_2, A_3, A_4, A_5, A_6)
-            wait(0.01)
-            z += 1
-        until z == 3
+        local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 1)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 2)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 3)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 4)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 919)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 1)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 2)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 3)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 4)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 919)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 1)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 2)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 3)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 4)
+        Event:FireServer(A_1, A_2, A_3, A_4, A_5, 919)
         kasdqw = false
     end
 end
@@ -744,9 +739,13 @@ if game.PlaceId == 6152116144 then
                     local Event = game:GetService("ReplicatedStorage").Remotes["To_Server"]["Handle_Initiate_S"]
                     Event:FireServer(A_1, A_2, A_3, A_4, A_5)
                 end
-                if mob ~= "a" and mob:FindFirstChild("HumanoidRootPart") then   
+                if mob:FindFirstChild("HumanoidRootPart") then
+                        
                 else
-                    ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
+                    repeat
+                        wait(0.5)
+                        ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maponeset.farmstud,0), maponeset.tspeed)
+                    until mob:FindFirstChild("HumanoidRootPart")
                 end
                 pcall(function()
                     if kasdqw then
@@ -1348,7 +1347,10 @@ if game.PlaceId == 11468159863 then
                 if mob:FindFirstChild("HumanoidRootPart") then
                         
                 else
-                    ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
+                    repeat
+                        wait(0.5)
+                        ImprovedTeleport(mob.WorldPivot.Position + Vector3.new(0,maptwoset.farmstud,0), maptwoset.tspeed)
+                    until mob:FindFirstChild("HumanoidRootPart")
                 end
                 if kasdqw then
                     repeat
@@ -1533,6 +1535,8 @@ if game.PlaceId == 11468075017 then
     local other = mainc:Sector("Other")
     local autoskill = autosc:Sector("Auto Skills")
     local msettings = mainc:Sector("Settings")
+
+    game.Players.LocalPlayer.DisplayName = "Trxdent - Project Slayers Premium"
 
     mains:Cheat("Checkbox","Auto Farm", function(q)
         ouwigaharaset.autofarm = q
@@ -1851,7 +1855,7 @@ if game.PlaceId == 11468075017 then
                         wait(0.2)
                     until xScript.GetLocalCharacter().Humanoid.Health == xScript.GetLocalCharacter().Humanoid.MaxHealth
                 end
-                if ouwigaharaset.autoorb and getclosestmob() == nil then
+                if ouwigaharaset.autoorb then
                     for i,v in pairs(game.Workspace.Map:GetChildren()) do
                         for _, h in pairs(orbnames) do
                             if v.Name == h then

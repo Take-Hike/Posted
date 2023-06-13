@@ -309,6 +309,7 @@ if game.PlaceId == 6152116144 then
     local fm = fin.new("verydark","TRXDENT", false)
     local mainc = fm:Category("Map 1")
     local ausc = fm:Category("Auto Skill")
+    local playerfarm = fm:Category("Player Farm")
     local mains = mainc:Sector("Main")
     local bsl = mainc:Sector("Blue Spider Lily")
     local other = mainc:Sector("Other")
@@ -319,6 +320,8 @@ if game.PlaceId == 6152116144 then
     local rmobdr
     local currentquest
     local sgourd = nil
+
+    
 
     -- Main
 
@@ -597,7 +600,7 @@ if game.PlaceId == 6152116144 then
     end)
 
     spawn(function()
-        while true do wait(2)
+        while true do wait()
             if maponeset.spamakaza then
                 local A_1 = "skil_ting_asd"
                 local A_2 = game.Players.LocalPlayer
@@ -1244,7 +1247,7 @@ if game.PlaceId == 11468159863 then
     end)
 
     spawn(function()
-        while true do wait(2)
+        while true do wait()
             if maptwoset.spamakaza then
                 local A_1 = "skil_ting_asd"
                 local A_2 = game.Players.LocalPlayer
@@ -1328,8 +1331,7 @@ if game.PlaceId == 11468159863 then
 
     spawn(function()
         while true do wait()
-            if maptwoset.autofarm then
-                
+            if maptwoset.autofarm then     
                 local mob = getclosestmob()
                 repeat
                     wait(0.25)
@@ -1526,6 +1528,7 @@ if game.PlaceId == 11468075017 then
         "InstaKill",
         "WisteriaPoisoning"
     }
+    local infdung = false
 
     local fin = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenizAf4can/FinityV2/main/FinityV2"))()
     local fm = fin.new("verydark","TRXDENT", false)
@@ -1537,6 +1540,16 @@ if game.PlaceId == 11468075017 then
     local msettings = mainc:Sector("Settings")
 
     game.Players.LocalPlayer.DisplayName = "Trxdent - Project Slayers Premium"
+
+    mains:Cheat("Checkbox","Inf Dungeon ( Shockwave BDA + 50 Mastery + Demon )", function(q)
+        ouwigaharaset.spamakaza = q
+        ouwigaharaset.killaura = q
+        ouwigaharaset.autofarm = q
+        ouwigaharaset.farmstud = 0
+        infdung = q
+        ouwigaharaset.autowardrums = q
+        ouwigaharaset.tspeed = 200
+    end)
 
     mains:Cheat("Checkbox","Auto Farm", function(q)
         ouwigaharaset.autofarm = q
@@ -1733,7 +1746,7 @@ if game.PlaceId == 11468075017 then
     end)
 
     spawn(function()
-        while true do wait(2)
+        while true do wait()
             if ouwigaharaset.spamakaza then
                 local A_1 = "skil_ting_asd"
                 local A_2 = game.Players.LocalPlayer
@@ -1854,6 +1867,17 @@ if game.PlaceId == 11468075017 then
                     repeat
                         wait(0.2)
                     until xScript.GetLocalCharacter().Humanoid.Health == xScript.GetLocalCharacter().Humanoid.MaxHealth
+                end
+                if infdung then
+                    for i,v in pairs(game.Workspace.Map:GetChildren()) do
+                        if v.Name == "DoublePoints" then
+                            for z, a in pairs(v:GetChildren()) do
+                                if a:IsA("MeshPart") or a:IsA("Part") then
+                                    ImprovedTeleport(a.Position, ouwigaharaset.tspeed)
+                                end
+                            end
+                        end
+                    end
                 end
                 if ouwigaharaset.autoorb then
                     for i,v in pairs(game.Workspace.Map:GetChildren()) do
